@@ -41,7 +41,7 @@ class Helper
     CONST TIME_IN_TRANSIT = 'time_in_transit';
 
     CONST DEFAULT_DELIVERY_MESSAGE = 'Delivers: ';
-    CONST DEFAULT_TRANSIT_MESSAGE = 'business day(s): ';
+    CONST DEFAULT_TRANSIT_MESSAGE = 'business days';
     CONST DEFAULT_DATE_FORMAT = 'yMd';
 
     public function extractTransactionId($rateResponse)
@@ -271,34 +271,34 @@ class Helper
             ),
             'cldr_date_format'      => array(
                 'en-US'            => array(
-                    'yMd'           => 'M/d/Y',
+                    'yMd'           => 'n/d/Y',
                     'yMMMd'         => 'M d, Y',
-                    'yMMMEd'        => 'EEE, M d, Y',
-                    'yMEd'          => 'EEE, M/d/Y',
+                    'yMMMEd'        => 'D, M d, Y',
+                    'yMEd'          => 'D, n/d/Y',
                     'MMMd'          => 'M d',
-                    'MMMEd'         => 'EEE, M d',
-                    'MEd'           => 'EEE, M/d',
-                    'Md'            => 'M/d',
-                    'yM'            => 'M/Y',
+                    'MMMEd'         => 'D, M d',
+                    'MEd'           => 'D, n/d',
+                    'Md'            => 'n/d',
+                    'yM'            => 'n/Y',
                     'yMMM'          => 'M Y',
                     'MMM'          => 'M',
-                    'E'             => 'EEE',
-                    'Ed'            => 'd EEE',
+                    'E'             => 'D',
+                    'Ed'            => 'd D',
                 ),
                 'en-GB'            => array(
-                    'yMd'           => 'd-M-Y',
+                    'yMd'           => 'd/m/Y',
                     'yMMMd'         => 'd M Y',
-                    'yMMMEd'        => 'EEE, d M Y',
-                    'yMEd'          => 'EEE, d-M-Y',
+                    'yMMMEd'        => 'D, d M Y',
+                    'yMEd'          => 'D, d/m/Y',
                     'MMMd'          => 'd M',
-                    'MMMEd'         => 'EEE, d M',
-                    'MEd'           => 'EEE, d-M',
-                    'Md'            => 'd-M',
-                    'yM'            => 'M-Y',
+                    'MMMEd'         => 'D d M',
+                    'MEd'           => 'D d/m',
+                    'Md'            => 'd/m',
+                    'yM'            => 'm/Y',
                     'yMMM'          => 'M Y',
                     'MMM'          =>  'M',
-                    'E'             => 'EEE',
-                    'Ed'            => 'EEE d',
+                    'E'             => 'D',
+                    'Ed'            => 'd D',
                 )
             )
         );
