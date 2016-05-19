@@ -5,3 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [20.0.0] - 2016-05-17
 ### Added
 - Initial Release
+
+## [20.0.1] - 2016-05-18
+### Added
+- SHQ16-947 - corrected date formats
