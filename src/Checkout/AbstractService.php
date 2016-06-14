@@ -27,13 +27,13 @@
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @author ShipperHQ Team sales@shipperhq.com
  */
-namespace ShipperHQ\Lib\Calendar;
+namespace ShipperHQ\Lib\Checkout;
 
 
 /**
- * Class Helper
+ * Abstract class service
  *
- * @package ShipperHQ\Lib\Rate
+ * @package ShipperHQ\Lib\Checkout
  */
 abstract class AbstractService
 {
@@ -51,5 +51,15 @@ abstract class AbstractService
      * Request shipping rates for specified carrier
      */
     abstract function reqeustShippingRates($carrierCode, $carriergroupId, $addressId = false);
+    /*
+     * Removed cached data selected at checkout
+     */
+    abstract function cleanDownSelectedData();
+
+    public function getKey(\ShipperHQ\Lib\Rate\CarrierSelections $data)
+    {
+        $key = $data->getCarrierGroupId() .'_' .$data->getCarrierId();
+        return $key;
+    }
 
 }

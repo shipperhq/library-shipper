@@ -39,16 +39,16 @@ class BaseCalendar
     /**
      * @var AbstractService
      */
-    protected $calendarService;
+    protected $checkoutService;
 
     /**
      * AbstractService $calendarService
      * @codeCoverageIgnore
      */
     public function __construct(
-        AbstractService $calendarService
+        AbstractService $checkoutService
     ) {
-        $this->calendarService = $calendarService;
+        $this->checkoutService = $checkoutService;
     }
 
     /*
@@ -57,22 +57,19 @@ class BaseCalendar
     public function processDateSelect($dateSelected, $carrierId, $carrierCode, $carrierGroupId, $addressId = false)
     {
         $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);
-        $this->calendarService->saveSelectedData($params);
-        $this->calendarService->cleanDownRates($carrierCode, $carrierGroupId, $addressId);
-        $rates = $this->calendarService->reqeustShippingRates($carrierCode, $carrierGroupId, $addressId);
+        $this->checkoutService->saveSelectedData($params);
+        $this->checkoutService->cleanDownRates($carrierCode, $carrierGroupId, $addressId);
+        $rates = $this->checkoutService->reqeustShippingRates($carrierCode, $carrierGroupId, $addressId);
+        $this->checkoutService->cleanDownSelectedData();
         return $rates;
     }
 
     public function getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
     {
-        //TODO map or object here
-        $array = [
-            'date_selected' => $dateSelected,
-            'carrier_id'    => $carrierId,
-            'carrier_code'  => $carrierCode,
-            'carriergroup_id' => $carrierGroupId
-        ];
-        return $array;
+        $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
+        $selections->setSelectedDate($dateSelected);
+
+        return $selections;
 
     }
 
