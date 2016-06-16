@@ -179,6 +179,8 @@ class Helper
 
     public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $deliveryMessage)
     {
+        $carrierGroupDetail['delivery_date'] = '';
+        $carrierGroupDetail['dispatch_date'] = '';
         if(isset($rate['deliveryDate']) && is_numeric($rate['deliveryDate'])) {
             $date = new \DateTime();
             $date->setTimestamp($rate['deliveryDate']/1000);
