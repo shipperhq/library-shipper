@@ -1,2 +1,2 @@
 # library-shipper
-Library for ShipperHQ client
+Library for Magento 2 ShipperHQ client

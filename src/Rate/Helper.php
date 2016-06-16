@@ -119,8 +119,13 @@ class Helper
                 $title .= ' ' . __($methodDescription);
             }
             $carrierType = $oneRate->carrierType;
-            if($carrierType == 'shqshared') {
-                $carrierType.= '_' .$oneRate->carrierType;
+            if($carrierRate->carrierType == 'shqshared') {
+                $carrierType = $carrierRate->carrierType .'_' .$oneRate->carrierType;
+                $carrierGroupDetail['carrierType'] = $carrierType;
+                if(isset($oneRate->carrierTitle)) {
+                    $carrierGroupDetail['carrierTitle'] = $oneRate->carrierTitle;
+                }
+
             }
             //create rateToAdd array - freight_rate, custom_duties,
             $rateToAdd = [
