@@ -73,7 +73,7 @@ class Helper
      * @param ConfigSettings $config
      * @return array
      */
-    public function extractShipperHQRates($carrierRate, $carrierGroupDetail, ConfigSettings $config)
+    public function extractShipperHQRates($carrierRate, $carrierGroupDetail, ConfigSettings $config, &$splitCarrierGroupDetail)
     {
         $carrierGroupId = $carrierGroupDetail['carrierGroupId'];
         $carrierResultWithRates = [
@@ -86,14 +86,60 @@ class Helper
         }
 
         if (isset($carrierRate->rates) && !array_key_exists('error', $carrierResultWithRates)) {
-            $thisCarriersRates = $this->populateRates($carrierRate, $carrierGroupDetail, $config);
+            $thisCarriersRates = $this->populateRates($carrierRate, $carrierGroupDetail, $config, $splitCarrierGroupDetail);
             $carrierResultWithRates['rates'] = $thisCarriersRates;
         }
 
         return $carrierResultWithRates;
     }
 
-    protected function populateRates($carrierRate, &$carrierGroupDetail, ConfigSettings $config)
+    public function extractShipperHQMergedRates($carrierRate, $splitCarrierGroupDetail, ConfigSettings $config)
+    {
+        $mergedCarrierResultWithRates = [];
+
+        $mergedCarrierResultWithRates = [
+            'code' => $carrierRate->carrierCode,
+            'title' => $carrierRate->carrierTitle];
+
+        if(isset($carrierRate->error)) {
+            $mergedCarrierResultWithRates['error'] = (array)$carrierRate->error;
+            $mergedCarrierResultWithRates['code'] = $config->getShipperHQCode();
+            $mergedCarrierResultWithRates['title'] = $config->getShipperHQTitle();
+        }
+
+        if(isset($carrierRate->rates) && !isset($mergedCarrierResultWithRates['error'])) {
+            $carrierGroupDetail = [];
+            $emptySplitCarrierGroupArray = false;
+            $mergedRates = $this->populateRates($carrierRate, $carrierGroupDetail, $config, $emptySplitCarrierGroupArray);
+            foreach($carrierRate->rates as $oneRate) {
+                if(isset($oneRate->rateBreakdownList)){
+                    $carrierGroupShippingDetail = array();
+                    $rateBreakdown = $oneRate->rateBreakdownList;
+                    foreach($rateBreakdown as $rateInMergedRate) {
+                        if(isset($splitCarrierGroupDetail[$rateInMergedRate->carrierGroupId])) {
+                            if(isset($splitCarrierGroupDetail[$rateInMergedRate->carrierGroupId][$rateInMergedRate->carrierCode])
+                                && isset($splitCarrierGroupDetail[$rateInMergedRate->carrierGroupId][$rateInMergedRate->carrierCode][$rateInMergedRate->methodCode])) {
+                                $carrierGroupShippingDetail[]= $splitCarrierGroupDetail[$rateInMergedRate->carrierGroupId][$rateInMergedRate->carrierCode][$rateInMergedRate->methodCode];
+                            }
+                        }
+
+                    }
+                    foreach($mergedRates as $key => $rateToAdd) {
+                        if($rateToAdd['methodcode'] != $oneRate->code) {
+                            continue;
+                        }
+                        $rateToAdd['carriergroup_detail'] = $carrierGroupShippingDetail;
+                        $mergedRates[$key] = $rateToAdd;
+                    }
+                }
+
+            }
+            $mergedCarrierResultWithRates['rates'] = $mergedRates;
+        }
+        return $mergedCarrierResultWithRates;
+    }
+
+    protected function populateRates($carrierRate, &$carrierGroupDetail, ConfigSettings $config, &$splitCarrierGroupDetail)
     {
         $thisCarriersRates = [];
         $baseRate = 1;
@@ -142,7 +188,10 @@ class Helper
                 $rateToAdd['method_description'] = $methodDescription;
             }
             $rateToAdd['carriergroup_detail'] = $carrierGroupDetail;
-
+            if(is_array($splitCarrierGroupDetail)) {
+                $splitCarrierGroupDetail[$carrierGroupDetail['carrierGroupId']][$carrierRate->carrierCode][$oneRate->code] =
+                    $carrierGroupDetail;
+            }
             $thisCarriersRates[] = $rateToAdd;
         }
         return $thisCarriersRates;
