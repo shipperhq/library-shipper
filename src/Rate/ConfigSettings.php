@@ -39,18 +39,26 @@ class ConfigSettings
     public $hideNotifications;
     public $transactionIdEnabled;
     public $locale;
+    public $shipperHQCode;
+    public $shipperHQTitle;
 
     /**
-     * @param false $hideNotifications
-     * @param false $transactionIdEnabled
-     * @param null $locale
+     * ConfigSettings constructor.
+     * @param $hideNotifications
+     * @param $transactionIdEnabled
+     * @param $locale
+     * @param $shipperHQCode
+     * @param $shipperHQTitle
      */
-    function __construct($hideNotifications = false, $transactionIdEnabled = false, $locale = null)
+    public function __construct($hideNotifications, $transactionIdEnabled, $locale, $shipperHQCode, $shipperHQTitle)
     {
         $this->hideNotifications = $hideNotifications;
         $this->transactionIdEnabled = $transactionIdEnabled;
         $this->locale = $locale;
+        $this->shipperHQCode = $shipperHQCode;
+        $this->shipperHQTitle = $shipperHQTitle;
     }
+
 
     /**
      * @param bool|false $hideNotifications
@@ -99,4 +107,37 @@ class ConfigSettings
     {
         return $this->transactionIdEnabled;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getShipperHQCode()
+    {
+        return $this->shipperHQCode;
+    }
+
+    /**
+     * @param mixed $shipperHQCode
+     */
+    public function setShipperHQCode($shipperHQCode)
+    {
+        $this->shipperHQCode = $shipperHQCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShipperHQTitle()
+    {
+        return $this->shipperHQTitle;
+    }
+
+    /**
+     * @param mixed $shipperHQTitle
+     */
+    public function setShipperHQTitle($shipperHQTitle)
+    {
+        $this->shipperHQTitle = $shipperHQTitle;
+    }
+
 }
