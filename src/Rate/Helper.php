@@ -93,7 +93,7 @@ class Helper
         return $carrierResultWithRates;
     }
 
-    public function extractShipperHQMergedRates($carrierRate, $splitCarrierGroupDetail, ConfigSettings $config)
+    public function extractShipperHQMergedRates($carrierRate, $splitCarrierGroupDetail, ConfigSettings $config, $transactionId)
     {
         $mergedCarrierResultWithRates = [];
 
@@ -108,7 +108,7 @@ class Helper
         }
 
         if(isset($carrierRate->rates) && !isset($mergedCarrierResultWithRates['error'])) {
-            $carrierGroupDetail = [];
+            $carrierGroupDetail = ['transaction' => $transactionId];
             $emptySplitCarrierGroupArray = false;
             $mergedRates = $this->populateRates($carrierRate, $carrierGroupDetail, $config, $emptySplitCarrierGroupArray);
             foreach($carrierRate->rates as $oneRate) {
