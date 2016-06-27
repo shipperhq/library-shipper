@@ -19,3 +19,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - SHQ16-1093 - url helper file
 - SHQ16-1119 - process merged rates
 
+## [20.0.4] - 2016-06-23
+### Added
+- SHQ16-1093 - transaction ID passed in for merged rates
