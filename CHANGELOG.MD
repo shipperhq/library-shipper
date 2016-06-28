@@ -22,3 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [20.0.4] - 2016-06-23
 ### Added
 - SHQ16-1093 - transaction ID passed in for merged rates
+
+## [20.0.5] - 2016-06-28
+### Added
+- SHQ16-1066 correction to variable namespace in library
