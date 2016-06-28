@@ -37,7 +37,7 @@ namespace ShipperHQ\Lib\Calendar;
 class BaseCalendar
 {
     /**
-     * @var AbstractService
+     * @var \ShipperHQ\Lib\Checkout\AbstractService
      */
     protected $checkoutService;
 
@@ -46,7 +46,7 @@ class BaseCalendar
      * @codeCoverageIgnore
      */
     public function __construct(
-        AbstractService $checkoutService
+        \ShipperHQ\Lib\Checkout\AbstractService $checkoutService
     ) {
         $this->checkoutService = $checkoutService;
     }
