@@ -27,6 +27,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - SHQ16-1066 correction to variable namespace in library
 
-## [20.0.6] - 2016-07-04
+## [20.0.7] - 2016-07-04
 ### Added
 - SHQ16-1066 process allowed methods response
