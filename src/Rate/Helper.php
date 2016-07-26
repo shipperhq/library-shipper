@@ -44,6 +44,21 @@ class Helper
     CONST DEFAULT_TRANSIT_MESSAGE = 'business days';
     CONST DEFAULT_DATE_FORMAT = 'yMd';
 
+    CONST AV_DISABLED = 'VALIDATION_NOT_ENABLED';
+    CONST ADDRESS_TYPE_UNKNOWN = 'UNKNOWN';
+
+    public function shouldValidateAddress($addressValidationStatus, $destinationType)
+    {
+        $validate = true;
+        if (!is_null($destinationType) && $destinationType != '') {
+            $validate = false;
+        } elseif (!is_null($addressValidationStatus) && $addressValidationStatus != ''
+            && $addressValidationStatus != 'EXACT_MATCH') {
+            $validate = false;
+        }
+        return $validate;
+    }
+
     public function extractTransactionId($rateResponse)
     {
         $responseSummary = (array)$rateResponse->responseSummary;
@@ -54,6 +69,34 @@ class Helper
     {
         $globals = (array)$rateResponse->globalSettings;
         return $globals;
+    }
+
+    public function extractDestinationType($rateResponse)
+    {
+        $addressType = false;
+        if(isset($rateResponse->addressValidationResponse)) {
+            $avResponse = $rateResponse->addressValidationResponse;
+            if(!isset($avResponse->validationStatus) || $avResponse->validationStatus == self::AV_DISABLED) {
+                return $addressType;
+            }
+            if(isset($avResponse->destinationType) && $avResponse->destinationType != self::ADDRESS_TYPE_UNKNOWN) {
+                $addressType = $avResponse->destinationType;
+            }
+        }
+        return $addressType;
+    }
+
+    public function extractAddressValidationStatus($rateResponse)
+    {
+        $validStatus = false;
+        if(isset($rateResponse->addressValidationResponse)) {
+            $avResponse = $rateResponse->addressValidationResponse;
+            if(!isset($avResponse->validationStatus) || $avResponse->validationStatus == self::AV_DISABLED) {
+                return $validStatus;
+            }
+            $validStatus = $avResponse->validationStatus;
+        }
+        return $validStatus;
     }
 
     public function extractCarrierGroupDetail($carrierGroup, $transactionId)
