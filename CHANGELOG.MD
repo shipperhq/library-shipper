@@ -30,3 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [20.0.7] - 2016-07-04
 ### Added
 - SHQ16-1066 process allowed methods response
+
+## [20.0.8] - 2016-07-26
+### Added
+- SHQ16-1261 support for address validation status and destination type
