@@ -138,8 +138,6 @@ class Helper
 
     public function extractShipperHQMergedRates($carrierRate, $splitCarrierGroupDetail, ConfigSettings $config, $transactionId)
     {
-        $mergedCarrierResultWithRates = [];
-
         $mergedCarrierResultWithRates = [
             'code' => $carrierRate->carrierCode,
             'title' => $carrierRate->carrierTitle];
