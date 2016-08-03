@@ -39,6 +39,7 @@ class ConfigSettings
     public $hideNotifications;
     public $transactionIdEnabled;
     public $locale;
+    public $timezone;
     public $shipperHQCode;
     public $shipperHQTitle;
 
@@ -47,18 +48,19 @@ class ConfigSettings
      * @param $hideNotifications
      * @param $transactionIdEnabled
      * @param $locale
+     * @param $timezone
      * @param $shipperHQCode
      * @param $shipperHQTitle
      */
-    public function __construct($hideNotifications, $transactionIdEnabled, $locale, $shipperHQCode, $shipperHQTitle)
+    public function __construct($hideNotifications, $transactionIdEnabled, $locale, $timezone, $shipperHQCode, $shipperHQTitle)
     {
         $this->hideNotifications = $hideNotifications;
         $this->transactionIdEnabled = $transactionIdEnabled;
         $this->locale = $locale;
+        $this->timezone = $timezone;
         $this->shipperHQCode = $shipperHQCode;
         $this->shipperHQTitle = $shipperHQTitle;
     }
-
 
     /**
      * @param bool|false $hideNotifications
@@ -90,6 +92,22 @@ class ConfigSettings
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
     }
 
     /**
