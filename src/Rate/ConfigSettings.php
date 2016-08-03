@@ -41,24 +41,26 @@ class ConfigSettings
     public $locale;
     public $shipperHQCode;
     public $shipperHQTitle;
+    public $timezone;
 
     /**
      * ConfigSettings constructor.
      * @param $hideNotifications
      * @param $transactionIdEnabled
      * @param $locale
+     * @param $timezone
      * @param $shipperHQCode
      * @param $shipperHQTitle
      */
-    public function __construct($hideNotifications, $transactionIdEnabled, $locale, $shipperHQCode, $shipperHQTitle)
+    public function __construct($hideNotifications, $transactionIdEnabled, $locale, $shipperHQCode, $shipperHQTitle, $timezone)
     {
         $this->hideNotifications = $hideNotifications;
         $this->transactionIdEnabled = $transactionIdEnabled;
         $this->locale = $locale;
         $this->shipperHQCode = $shipperHQCode;
         $this->shipperHQTitle = $shipperHQTitle;
+        $this->timezone = $timezone;
     }
-
 
     /**
      * @param bool|false $hideNotifications
@@ -138,6 +140,22 @@ class ConfigSettings
     public function setShipperHQTitle($shipperHQTitle)
     {
         $this->shipperHQTitle = $shipperHQTitle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param mixed $timezone
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
     }
 
 }
