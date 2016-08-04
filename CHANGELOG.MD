@@ -34,3 +34,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [20.0.8] - 2016-07-26
 ### Added
 - SHQ16-1261 support for address validation status and destination type
+
+## [20.0.9] - 2016-08-04
+### Added
+- SHQ16-1359 include timezone in config settings for date calculations
