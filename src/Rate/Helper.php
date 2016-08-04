@@ -138,8 +138,6 @@ class Helper
 
     public function extractShipperHQMergedRates($carrierRate, $splitCarrierGroupDetail, ConfigSettings $config, $transactionId)
     {
-        $mergedCarrierResultWithRates = [];
-
         $mergedCarrierResultWithRates = [
             'code' => $carrierRate->carrierCode,
             'title' => $carrierRate->carrierTitle];
@@ -202,7 +200,7 @@ class Helper
             $this->populateRateLevelDetails((array)$oneRate, $carrierGroupDetail, $baseRate);
 
             $this->populateRateDeliveryDetails((array)$oneRate, $carrierGroupDetail, $methodDescription, $dateFormat,
-                $dateOption, $deliveryMessage);
+                $dateOption, $deliveryMessage, $config->getTimezone());
 
             if ($methodDescription) {
                 $title .= ' ' . __($methodDescription);
@@ -269,12 +267,14 @@ class Helper
         $carrierGroupDetail['code'] = $rate['code'];
     }
 
-    public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $deliveryMessage)
+    public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $deliveryMessage, $timezone)
     {
         $carrierGroupDetail['delivery_date'] = '';
         $carrierGroupDetail['dispatch_date'] = '';
         if(isset($rate['deliveryDate']) && is_numeric($rate['deliveryDate'])) {
             $date = new \DateTime();
+
+            $date->setTimezone(new \DateTimeZone($timezone));
             $date->setTimestamp($rate['deliveryDate']/1000);
             $deliveryDate = $date->format($dateFormat);
 
@@ -303,6 +303,7 @@ class Helper
         }
         if(isset($rate['dispatchDate']) && is_numeric($rate['dispatchDate'])) {
             $dispatch = new \DateTime();
+            $dispatch->setTimezone(new \DateTimeZone($timezone));
             $dispatch->setTimestamp($rate['dispatchDate']/1000);
             $dispatchDate = $dispatch->format($dateFormat);
             $carrierGroupDetail['dispatch_date'] = $dispatchDate;
