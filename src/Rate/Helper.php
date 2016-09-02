@@ -131,6 +131,8 @@ class Helper
         if (isset($carrierRate->rates) && !array_key_exists('error', $carrierResultWithRates)) {
             $thisCarriersRates = $this->populateRates($carrierRate, $carrierGroupDetail, $config, $splitCarrierGroupDetail);
             $carrierResultWithRates['rates'] = $thisCarriersRates;
+            $thisCarriersShipments = $this->populateShipments($carrierRate, $carrierGroupDetail);
+            $carrierResultWithRates['shipments'] = $thisCarriersShipments;
         }
 
         return $carrierResultWithRates;
@@ -184,7 +186,7 @@ class Helper
     {
         $thisCarriersRates = [];
         $baseRate = 1;
-        $this->populateCarrierLevelDetails($carrierRate, $carrierGroupDetail, $config->getHideNotifications());
+        $shipments = $this->populateCarrierLevelDetails($carrierRate, $carrierGroupDetail, $config->getHideNotifications());
 
         $dateFormat = $this->getDateFormat($carrierRate, $config->getLocale());
 
@@ -244,6 +246,7 @@ class Helper
         $carrierGroupDetail['carrierTitle'] = $carrierRate->carrierTitle;
         $carrierGroupDetail['carrier_code'] = $carrierRate->carrierCode;
         $carrierGroupDetail['carrierName'] = $carrierRate->carrierName;
+
         $notice = $customDescription = false;
         if(!$hideNotifyConfigFlag && isset($carrierRate->notices)) {
             $notice = '';
@@ -265,6 +268,17 @@ class Helper
         $carrierGroupDetail['price'] = (float)$rate['totalCharges']*$currencyConversionRate;
         $carrierGroupDetail['cost'] = (float)$rate['shippingPrice']*$currencyConversionRate;
         $carrierGroupDetail['code'] = $rate['code'];
+        if(isset($rate['selectedOptions'])) {
+            $selectedOptions =  (array)$rate['selectedOptions'];
+            if(isset($selectedOptions['options'])) {
+                foreach($selectedOptions['options'] as $option) {
+                    $thisOption =(array)$option;
+                    if(isset($thisOption['name'])) {
+                        $carrierGroupDetail[$thisOption['name']] = $thisOption['value'];
+                    }
+                }
+            }
+        }
     }
 
     public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $deliveryMessage, $timezone)
@@ -308,6 +322,36 @@ class Helper
             $dispatchDate = $dispatch->format($dateFormat);
             $carrierGroupDetail['dispatch_date'] = $dispatchDate;
         }
+    }
+
+    protected function populateShipments($carrierRate, $carrierGroupDetail)
+    {
+        $shipments = [];
+        $cgId = array_key_exists('carrierGroupId', $carrierGroupDetail) ? $carrierGroupDetail['carrierGroupId'] : null;
+        $mapping = $this->getPackagesMapping();
+
+        //populate packages
+        if(isset($carrierRate->shipments) && $carrierRate->shipments != null) {
+            $standardData = ['carrier_group_id' => $cgId,
+                'carrier_code' =>  $carrierRate->carrierCode];
+            foreach($carrierRate->shipments as $shipment) {
+                $data = array_merge($standardData, $this->map($mapping,(array)$shipment));
+                $shipments[] = $data;
+            }
+        }
+        if(isset($carrierRate->rates)) {
+            foreach ($carrierRate->rates as $oneRate) {
+                if(isset($oneRate->shipments)) {
+                    $standardData = ['carrier_group_id' => $cgId,
+                        'carrier_code' =>  $carrierRate->carrierCode.'_'.$oneRate->code];
+                    foreach($oneRate->shipments as $shipment) {
+                        $data = array_merge($standardData, $this->map($mapping,(array)$shipment));
+                        $shipments[] = $data;
+                    }
+                }
+            }
+        }
+        return $shipments;
     }
 
     public function getDeliveryMessage($carrierRate, $dateOption)
@@ -414,5 +458,49 @@ class Helper
         } else {
             return $codes[$type][$code];
         }
+    }
+
+    public function map($mapping, $source)
+    {
+        $target = [];
+        foreach ($mapping as $targetField => $sourceField) {
+            if (is_string($sourceField)) {
+                if (strpos($sourceField, '/') !== false) {
+                    $fields = explode('/', $sourceField);
+                    $value = $source;
+                    while ($fields) {
+                        $field = array_shift($fields);
+                        if (isset($value[$field])) {
+                            $value = $value[$field];
+                        } else {
+                            $value = null;
+                            break;
+                        }
+                    }
+                    $target[$targetField] = $value;
+                } else {
+                    $target[$targetField] = $source[$sourceField];
+                }
+            } elseif (is_array($sourceField)) {
+                list($field, $defaultValue) = $sourceField;
+                $target[$targetField] = (isset($source[$field]) ? $source[$field] : $defaultValue);
+            }
+        }
+
+        return $target;
+    }
+
+    protected function getPackagesMapping()
+    {
+        return [
+            'package_name' => 'name',
+            'length' => 'length',
+            'width' => 'width',
+            'height' => 'height',
+            'weight' => 'weight',
+            'surcharge_price' => 'surchargePrice',
+            'declared_value' => 'declaredValue',
+            'items'         => 'boxedItems'
+        ];
     }
 }
