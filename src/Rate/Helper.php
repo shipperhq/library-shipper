@@ -47,6 +47,22 @@ class Helper
     CONST AV_DISABLED = 'VALIDATION_NOT_ENABLED';
     CONST ADDRESS_TYPE_UNKNOWN = 'UNKNOWN';
 
+    /**
+     * @var \ShipperHQ\Lib\Helper\Date
+     */
+    protected $dateHelper;
+
+    /**
+     * \ShipperHQ\Lib\Helper\Date $dateHelper
+     * @codeCoverageIgnore
+     */
+    public function __construct(
+        \ShipperHQ\Lib\Helper\Date $dateHelper
+    )
+    {
+        $this->dateHelper = $dateHelper;
+    }
+
     public function shouldValidateAddress($addressValidationStatus, $destinationType)
     {
         $validate = true;
@@ -70,7 +86,7 @@ class Helper
         $globals = (array)$rateResponse->globalSettings;
         return $globals;
     }
-
+    
     public function extractDestinationType($rateResponse)
     {
         $addressType = false;
@@ -99,13 +115,15 @@ class Helper
         return $validStatus;
     }
 
-    public function extractCarrierGroupDetail($carrierGroup, $transactionId)
+    public function extractCarrierGroupDetail($carrierGroup, $transactionId, $configSettings)
     {
         $carrierGroupDetail = (array)$carrierGroup->carrierGroupDetail;
         if(!array_key_exists('carrierGroupId', $carrierGroupDetail) || $carrierGroupDetail['carrierGroupId'] =='') {
             $carrierGroupDetail['carrierGroupId'] = 0;
         }
         $carrierGroupDetail['transaction'] = $transactionId;
+        $carrierGroupDetail['locale'] = $configSettings->getLocale();
+        $carrierGroupDetail['timezone'] = $configSettings->getTimezone();
 
         return $carrierGroupDetail;
     }
@@ -188,7 +206,7 @@ class Helper
         $baseRate = 1;
         $shipments = $this->populateCarrierLevelDetails($carrierRate, $carrierGroupDetail, $config->getHideNotifications());
 
-        $dateFormat = $this->getDateFormat($carrierRate, $config->getLocale());
+        $dateFormat = $this->extractDateFormat($carrierRate, $config->getLocale());
 
         $dateOption = $carrierRate->dateOption;
         $deliveryMessage = $this->getDeliveryMessage($carrierRate, $dateOption);
@@ -226,6 +244,13 @@ class Helper
                 'carrier_type' => $carrierType,
                 'carrier_id' => $carrierRate->carrierId,
             ];
+            if(isset($carrierGroupDetail['dispatch_date'])) {
+                $rateToAdd['dispatch_date'] = $carrierGroupDetail['dispatch_date'];
+            }
+            if(isset($carrierGroupDetail['delivery_date'])) {
+                $rateToAdd['delivery_date'] = $carrierGroupDetail['delivery_date'];
+            }
+            $rateToAdd['tooltip'] = $oneRate->description;
 
             if ($methodDescription) {
                 $rateToAdd['method_description'] = $methodDescription;
@@ -285,6 +310,7 @@ class Helper
     {
         $carrierGroupDetail['delivery_date'] = '';
         $carrierGroupDetail['dispatch_date'] = '';
+        $carrierGroupDetail['display_date_format'] = $dateFormat;
         if(isset($rate['deliveryDate']) && is_numeric($rate['deliveryDate'])) {
             $date = new \DateTime();
 
@@ -366,19 +392,11 @@ class Helper
         return $message;
     }
 
-    public function getDateFormat($carrierRate, $locale)
+    public function extractDateFormat($carrierRate, $locale)
     {
         $interim = isset($carrierRate->deliveryDateFormat) ?
             $carrierRate->deliveryDateFormat : self::DEFAULT_DATE_FORMAT;
-        $dateFormat = $this->getCldrDateFormat($locale, $interim);
-        return $dateFormat;
-    }
-
-    public function getCldrDateFormat($locale, $code)
-    {
-        $dateFormatArray = $this->getCode('cldr_date_format', $locale);
-        $dateFormat = is_array($dateFormatArray) && array_key_exists($code, $dateFormatArray) ? $dateFormatArray[$code]:
-            'MM/dd/Y';
+        $dateFormat = $this->dateHelper->getCldrDateFormat($locale, $interim);
         return $dateFormat;
     }
 
