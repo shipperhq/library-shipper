@@ -178,15 +178,8 @@ class BaseCalendar
         {
             $arrBlackoutDates[] = $this->getDateFromDate($blackoutDate, $timezone, $dateFormat);
         };
-        $arrBlackoutDays = array();
-        foreach($calendarDetails['blackoutDays'] as $dayOfWeek)
-        {
-            //Java Sunday = 7, Monday = 1. PHP Monday = 1, Saturday = 6, Sunday = 0
-            if($dayOfWeek == 7) {
-                $dayOfWeek = 0;
-            }
-            $arrBlackoutDays[] = $dayOfWeek;
-        }
+        $arrBlackoutDays = $calendarDetails['blackoutDays'];
+
         if(count($arrBlackoutDays) == 7 ) {
             //TODO somehow flag that there are no date options available
 //            if(Mage::helper('shipperhq_shipper')->isDebug()) {
@@ -348,5 +341,19 @@ class BaseCalendar
         $day = strtotime('+' .$numDaysToAdd .' day', $day);
         return $day;
 
+    }
+
+    public function getBlackoutDaysList($blackoutArray)
+    {
+        $arrBlackoutDays = [];
+        foreach($blackoutArray as $dayOfWeek)
+        {
+            //Java Sunday = 7, Monday = 1. PHP Monday = 1, Saturday = 6, Sunday = 0
+            if($dayOfWeek == 7) {
+                $dayOfWeek = 0;
+            }
+            $arrBlackoutDays[] = $dayOfWeek;
+        }
+        return $arrBlackoutDays;
     }
 }

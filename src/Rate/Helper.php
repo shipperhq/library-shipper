@@ -317,7 +317,6 @@ class Helper
             $date->setTimezone(new \DateTimeZone($timezone));
             $date->setTimestamp($rate['deliveryDate']/1000);
             $deliveryDate = $date->format($dateFormat);
-
             if($dateOption == self::DELIVERY_DATE_OPTION) {
                 $methodDescription = " $deliveryMessage $deliveryDate";
                 if($rate['latestDeliveryDate'] && is_numeric($rate['latestDeliveryDate'])) {

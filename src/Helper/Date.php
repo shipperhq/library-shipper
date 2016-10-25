@@ -75,12 +75,12 @@ class Date
     {
         $codes = [
             'date_format'   => [
-                'en-GB'         => 'd-m-y',
-                'en-US'         => 'm/d/y'
+                'en-GB'         => 'd-m-Y',
+                'en-US'         => 'm/d/Y'
             ],
             'datepicker_format' => [
-                'en-GB'         => 'dd-mm-y',
-                'en-US'         => 'mm/dd/y'
+                'en-GB'         => 'dd-mm-yy',
+                'en-US'         => 'mm/dd/yy'
             ],
             'cldr_date_format'      => [
                 'en-US'            => [
@@ -99,7 +99,7 @@ class Date
                     'Ed'            => 'd D',
                 ],
                 'en-GB'            => [
-                    'yMd'           => 'd/m/Y',
+                    'yMd'           => 'd-m-Y',  //really important that this is not changed to d/m/Y - the slashes will cause exceptions
                     'yMMMd'         => 'd M Y',
                     'yMMMEd'        => 'D, d M Y',
                     'yMEd'          => 'D, d/m/Y',
