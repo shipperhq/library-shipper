@@ -209,7 +209,7 @@ class Helper
         $dateFormat = $this->extractDateFormat($carrierRate, $config->getLocale());
 
         $dateOption = $carrierRate->dateOption;
-        $deliveryMessage = $this->getDeliveryMessage($carrierRate, $dateOption);
+     //   $deliveryMessage = $this->getDeliveryMessage($carrierRate, $dateOption);
 
         foreach ($carrierRate->rates as $oneRate) {
             $methodDescription = false;
@@ -220,7 +220,7 @@ class Helper
             $this->populateRateLevelDetails((array)$oneRate, $carrierGroupDetail, $baseRate);
 
             $this->populateRateDeliveryDetails((array)$oneRate, $carrierGroupDetail, $methodDescription, $dateFormat,
-                $dateOption, $deliveryMessage, $config->getTimezone());
+                $dateOption, $config->getTimezone());
 
             if ($methodDescription) {
                 $title .= ' ' . __($methodDescription);
@@ -306,7 +306,7 @@ class Helper
         }
     }
 
-    public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $deliveryMessage, $timezone)
+    public function populateRateDeliveryDetails($rate, &$carrierGroupDetail, &$methodDescription, $dateFormat, $dateOption, $timezone)
     {
         $carrierGroupDetail['delivery_date'] = '';
         $carrierGroupDetail['dispatch_date'] = '';
@@ -317,27 +317,6 @@ class Helper
             $date->setTimezone(new \DateTimeZone($timezone));
             $date->setTimestamp($rate['deliveryDate']/1000);
             $deliveryDate = $date->format($dateFormat);
-            if($dateOption == self::DELIVERY_DATE_OPTION) {
-                $methodDescription = " $deliveryMessage $deliveryDate";
-                if($rate['latestDeliveryDate'] && is_numeric($rate['latestDeliveryDate'])) {
-                    $latestdate = new \DateTime();
-                    $latestdate->setTimestamp($rate['latestDeliveryDate']/1000);
-                    $latestDeliveryDate = $latestdate->format($dateFormat);
-                    $methodDescription.= ' - ' .$latestDeliveryDate;
-                }
-            }
-            else if($dateOption == self::TIME_IN_TRANSIT
-                && isset($rate['dispatchDate'])) {
-                $numDays = floor(abs($rate['deliveryDate']/1000 - $rate['dispatchDate']/1000)/60/60/24);
-
-                if($rate['latestDeliveryDate'] && is_numeric($rate['latestDeliveryDate'])) {
-                    $maxNumDays = floor(abs($rate['latestDeliveryDate']/1000 - $rate->dispatchDate/1000)/60/60/24);
-                    $methodDescription = " ($numDays - $maxNumDays $deliveryMessage)";
-                }
-                else {
-                    $methodDescription = " ($numDays $deliveryMessage)";
-                }
-            }
             $carrierGroupDetail['delivery_date'] = $deliveryDate;
         }
         if(isset($rate['dispatchDate']) && is_numeric($rate['dispatchDate'])) {
@@ -346,6 +325,11 @@ class Helper
             $dispatch->setTimestamp($rate['dispatchDate']/1000);
             $dispatchDate = $dispatch->format($dateFormat);
             $carrierGroupDetail['dispatch_date'] = $dispatchDate;
+        }
+
+        if(isset($rate['deliveryMessage']) && !is_null($rate['deliveryMessage']) && $rate['deliveryMessage'] != '') {
+            $methodDescription = $dateOption == self::TIME_IN_TRANSIT ?
+                '(' .$rate['deliveryMessage'] .')' : $rate['deliveryMessage'];
         }
     }
 
@@ -377,18 +361,6 @@ class Helper
             }
         }
         return $shipments;
-    }
-
-    public function getDeliveryMessage($carrierRate, $dateOption)
-    {
-        $message = self::DEFAULT_DELIVERY_MESSAGE;
-        if($dateOption == self::TIME_IN_TRANSIT) {
-            $message = self::DEFAULT_TRANSIT_MESSAGE;
-        }
-        else if($dateOption == self::DELIVERY_DATE_OPTION && isset($carrierRate->deliveryDateMessage)) {
-            $message = $carrierRate->deliveryDateMessage;
-        }
-        return $message;
     }
 
     public function extractDateFormat($carrierRate, $locale)

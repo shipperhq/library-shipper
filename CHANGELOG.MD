@@ -1,5 +1,17 @@
 # Change Log
 
+## [20.1.1](https://github.com/webshopapps/library-shipper/tree/20.1.1) (2016-10-31)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.0...20.1.1)
+
+## [20.1.0](https://github.com/webshopapps/library-shipper/tree/20.1.0) (2016-10-24)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.14...20.1.0)
+
+## [20.0.14](https://github.com/webshopapps/library-shipper/tree/20.0.14) (2016-10-24)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.13...20.0.14)
+
+## [20.0.13](https://github.com/webshopapps/library-shipper/tree/20.0.13) (2016-10-14)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.12...20.0.13)
+
 ## [20.0.12](https://github.com/webshopapps/library-shipper/tree/20.0.12) (2016-09-02)
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.11...20.0.12)
 
