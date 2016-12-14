@@ -45,12 +45,12 @@ abstract class AbstractService
     /*
      * Remove carrier shipping rates before re-requesting
      */
-    abstract function cleanDownRates($carrierCode, $carriergroupId, $addressId = false);
+    abstract function cleanDownRates($cartId, $carrierCode, $carriergroupId, $addressId = false);
 
     /*
      * Request shipping rates for specified carrier
      */
-    abstract function reqeustShippingRates($carrierCode, $carriergroupId, $addressId = false);
+    abstract function reqeustShippingRates($cartId, $carrierCode, $carriergroupId, $addressData, $addressId = false);
     /*
      * Removed cached data selected at checkout
      */

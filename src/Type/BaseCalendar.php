@@ -54,12 +54,20 @@ class BaseCalendar
     /*
      * Process date select action
      */
-    public function processDateSelect($dateSelected, $carrierId, $carrierCode, $carrierGroupId, $addressId = false)
+    public function processDateSelect($dateSelected, $carrierId, $carrierCode, $carrierGroupId, $addressData, $cartId, $addressId = false)
     {
         $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);
         $this->checkoutService->saveSelectedData($params);
-        $this->checkoutService->cleanDownRates($carrierCode, $carrierGroupId, $addressId);
-        $rates = $this->checkoutService->reqeustShippingRates($carrierCode, $carrierGroupId, $addressId);
+        $this->checkoutService->cleanDownRates($cartId, $carrierCode, $carrierGroupId, $addressId);
+        $addressArray = ['street' => $addressData->getStreet(), 'region' => $addressData->getRegion(),
+                'region_id' => $addressData->getRegionId(), 'postcode' => $addressData->getPostcode(),
+                'country_id' => $addressData->getCountryId()];
+        try {
+            $rates = $this->checkoutService->reqeustShippingRates($cartId, $carrierCode, $carrierGroupId, $addressArray, $addressId);
+        }
+        catch (Exception $e) {
+            //handle so we can clean down rates if necessary
+        }
         //need to do smart cleaning at this point
         $this->checkoutService->cleanDownSelectedData();
         return $rates;
@@ -123,7 +131,6 @@ class BaseCalendar
 //                    }
                     if($slotsFound = $this->getDeliveryTimeSlots($calendarDetails, $dateKey)) {
                         $deliveryDatesAndTimes[$dateKey] = $slotsFound;
-                       // break;
                     }
                     else {
                         unset($dateOptions[$dateKey]);
@@ -187,7 +194,8 @@ class BaseCalendar
 //            }
             return $dateOptions;
         }
-        while(count($dateOptions) < $numPickupDays) {
+        $countDays = 0;
+        while($countDays < $numPickupDays) {
             //support end date inclusive
             if($endDate && $startDate > $endDate) {
                 break;
@@ -199,10 +207,12 @@ class BaseCalendar
             if(in_array($nextDay, $arrBlackoutDates) ||
                 in_array($this->getDayOfWeekFromTimestamp($startDate, $timezone), $arrBlackoutDays)) {
                 $this->_addDay($startDate);
+                $countDays++;
                 continue;
             }
             $dateOptions[$nextDay] = $nextDay;
             $this->_addDay($startDate);
+            $countDays++;
         }
         return $dateOptions;
     }
