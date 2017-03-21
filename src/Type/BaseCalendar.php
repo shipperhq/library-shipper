@@ -231,6 +231,8 @@ class BaseCalendar
         $isToday = false;
         if($today == $date) {
             $isToday = true;
+            //account for same day delivery with lead time in hours
+            $exactStartTimeStamp = $calendarDetails['start'];
         }
 
         $timeSlotDetail = (array)$calendarDetails['timeSlots'];
@@ -245,10 +247,10 @@ class BaseCalendar
 
         //for implementation of date/day based slot detail in future
         $timeSlots = array();
-        foreach($timeSlotDetail as $timeSlotDetail) {
-            $start = $timeSlotDetail['timeStart'];
-            $end =  $timeSlotDetail['timeEnd'];
-            $interval = $timeSlotDetail['interval'];
+        foreach($timeSlotDetail as $slotDetail) {
+            $start = $slotDetail['timeStart'];
+            $end =  $slotDetail['timeEnd'];
+            $interval = $slotDetail['interval'];
 
             $startTime = strtotime($start);
             $endTime = strtotime($end);
@@ -263,6 +265,7 @@ class BaseCalendar
             if($isToday) {
                 $currentTimeClass = new \DateTime("now", new \DateTimeZone($timezone));
                 $currentTime = $currentTimeClass->getTimestamp();
+                $currentTime = $currentTime > $exactStartTimeStamp ? $currentTime : $exactStartTimeStamp;
             }
 
             //if interval is half or full day then calculate those intervals
