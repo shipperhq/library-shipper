@@ -54,9 +54,21 @@ class BasePickup extends BaseCalendar
     /*
      * Process location select action
      */
-    public function processLocationSelect($locationSelected, $dateSelected, $carrierId, $carrierCode, $carrierGroupId, $addressId = false)
-    {
-        $params = $this->getLocationSelectSaveParameters($locationSelected, $dateSelected, $carrierId, $carrierCode, $carrierGroupId);
+    public function processLocationSelect(
+        $locationSelected,
+        $dateSelected,
+        $carrierId,
+        $carrierCode,
+        $carrierGroupId,
+        $addressId = false
+    ) {
+        $params = $this->getLocationSelectSaveParameters(
+            $locationSelected,
+            $dateSelected,
+            $carrierId,
+            $carrierCode,
+            $carrierGroupId
+        );
         $this->checkoutService->saveSelectedData($params);
         $this->checkoutService->cleanDownRates($carrierCode, $carrierGroupId, $addressId);
         $rates = $this->checkoutService->reqeustShippingRates($carrierCode, $carrierGroupId, $addressId);
@@ -65,33 +77,43 @@ class BasePickup extends BaseCalendar
         return $rates;
     }
 
-    public function getLocationSelectSaveParameters($locationSelected, $dateSelected, $carrierId, $carrierCode, $carrierGroupId)
-    {
+    public function getLocationSelectSaveParameters(
+        $locationSelected,
+        $dateSelected,
+        $carrierId,
+        $carrierCode,
+        $carrierGroupId
+    ) {
         $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
         $selections->setSelectedLocation($locationSelected);
         $selections->setSelectedDate($dateSelected);
 
         return $selections;
-
     }
 
     public function processPickupDetails($carrierRate, $carrierGroupDetail)
     {
         $locationDetails = (array)$carrierRate->pickupLocationDetails;
-        $locationsAvailable = array();
-        if(!empty($locationDetails) && isset($locationDetails['pickupLocations'])) {
-            foreach($locationDetails['pickupLocations'] as $location) {
+        $locationsAvailable = [];
+        if (!empty($locationDetails) && isset($locationDetails['pickupLocations'])) {
+            foreach ($locationDetails['pickupLocations'] as $location) {
                 $locationAsArray =(array)$location;
                 $calendarDetails = (array)$location->calendarDetails;
-                if(!empty($calendarDetails)) {
+                if (!empty($calendarDetails)) {
                     $calendarDetails['startDate'] = isset($locationAsArray['pickupDate']) ? $locationAsArray['pickupDate'] : $calendarDetails['startDate'];
                     $defaultDate = $location->pickupDate/1000;
                     $locale = isset($carrierGroupDetail['locale']) ? $carrierGroupDetail['locale'] : null;
                     $deliveryDateFormat = $carrierRate->deliveryDateFormat;
-                    $calendarDetails = $this->getCalendarDetailsArray($calendarDetails, $carrierGroupDetail,
-                        $carrierRate->carrierId, $carrierRate->carrierCode, $locale, $deliveryDateFormat, $defaultDate);
-                }
-                else {
+                    $calendarDetails = $this->getCalendarDetailsArray(
+                        $calendarDetails,
+                        $carrierGroupDetail,
+                        $carrierRate->carrierId,
+                        $carrierRate->carrierCode,
+                        $locale,
+                        $deliveryDateFormat,
+                        $defaultDate
+                    );
+                } else {
                     $calendarDetails['showDate'] = false;
                 }
                 $locationAsArray['calendarDetails'] = $calendarDetails;
@@ -99,10 +121,8 @@ class BasePickup extends BaseCalendar
                 $locationAsArray['carrier_code'] = $carrierRate->carrierCode;
                 $locationAsArray['distanceUnit'] = $carrierGroupDetail['distanceUnit'];
                 $locationsAvailable[$location->pickupId] = $locationAsArray;
-
             }
         }
         return $locationsAvailable;
-
     }
 }

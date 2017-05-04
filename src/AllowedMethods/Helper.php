@@ -44,12 +44,10 @@ class Helper
         $carrierConfig = [];
 
         foreach ($returnedMethods as $carrierMethod) {
-
             $methodList = $carrierMethod->methods;
             $methodCodeArray = [];
 
             foreach ($methodList as $method) {
-
                 $allowedMethodCode = $method->methodCode;
                 $allowedMethodCode = preg_replace('/&|;| /', "_", $allowedMethodCode);
 
@@ -60,26 +58,23 @@ class Helper
 
             $allowedMethods[$carrierMethod->carrierCode] = $methodCodeArray;
             $carrierConfig[$carrierMethod->carrierCode]['title'] = $carrierMethod->title;
-            if(isset($carrierMethod->sortOrder)) {
+            if (isset($carrierMethod->sortOrder)) {
                 $carrierConfig[$carrierMethod->carrierCode]['sortOrder'] = $carrierMethod->sortOrder;
             }
-
         }
         return $carrierConfig;
-
     }
 
     public function getAllowedMethodsArray($allowed, $requestedCode)
     {
         $arr = [];
         foreach ($allowed as $carrierCode => $allowedMethodArray) {
-            if(is_null($requestedCode) || $carrierCode == $requestedCode) {
-                foreach($allowedMethodArray as $methodCode => $allowedMethod) {
+            if ($requestedCode === null || $carrierCode == $requestedCode) {
+                foreach ($allowedMethodArray as $methodCode => $allowedMethod) {
                     $arr[$methodCode] = $allowedMethod;
                 }
             }
         }
         return $arr;
     }
-
 }
