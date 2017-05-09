@@ -6,6 +6,9 @@
 
 **Merged pull requests:**
 
+- SHQ16-2041 belt and braces on date options [\#9](https://github.com/webshopapps/library-shipper/pull/9) ([wsagen](https://github.com/wsagen))
+- Shq16 2032 [\#8](https://github.com/webshopapps/library-shipper/pull/8) ([wsagen](https://github.com/wsagen))
+- SHQ16-2023 modified time calculations in time slot logic [\#7](https://github.com/webshopapps/library-shipper/pull/7) ([wsagen](https://github.com/wsagen))
 - SHQ16-2004 admin shipping [\#6](https://github.com/webshopapps/library-shipper/pull/6) ([wsagen](https://github.com/wsagen))
 - SHQ16-2029 code sniffer changes to white space and formatting [\#5](https://github.com/webshopapps/library-shipper/pull/5) ([wsagen](https://github.com/wsagen))
 

@@ -134,6 +134,7 @@ class BaseCalendar
         $calendarDetails['datepickerFormat'] = \ShipperHQ\Lib\Helper\Date::getDatepickerFormat($locale);
         $calendarDetails['displayDateFormat'] = \ShipperHQ\Lib\Helper\Date::getCldrDateFormat($locale, $deliveryDateFormat);
         $calendarDetails['timezone'] = $carrierGroupDetail['timezone'];
+        $calendarDetails['default_date_timestamp'] = $defaultDate;
         if ($calendarDetails['startDate'] != '') {
             $calendarDetails['start'] = $calendarDetails['startDate']/1000;
         } else {
@@ -166,11 +167,14 @@ class BaseCalendar
                 $calendarDetails['display_time_slots'] = false;
                 $calendarDetails['showTimeslots'] = false;
             }
+
         }
         $calendarDetails['allowed_dates'] = $dateOptions;
-        $keys = array_keys($dateOptions);
-        $calendarDetails['min_date'] = $keys[0];
-        $calendarDetails['max_date'] = end($keys);
+        if (!empty($dateOptions)) { //SHQ16-2041
+            $keys = array_keys($dateOptions);
+            $calendarDetails['min_date'] = $keys[0];
+            $calendarDetails['max_date'] = end($keys);
+        }
 
         return $calendarDetails;
     }
@@ -242,6 +246,14 @@ class BaseCalendar
             $isToday = true;
             //account for same day delivery with lead time in hours
             $exactStartTimeStamp = $calendarDetails['start'];
+            $selectedDate = $this->getDateFromTimestamp(
+                $calendarDetails['default_date_timestamp'],
+                $timezone,
+                $dateFormat
+            );
+            if($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
+                $exactStartTimeStamp = $calendarDetails['default_date_timestamp'];
+            }
         }
 
         $timeSlotDetail = (array)$calendarDetails['timeSlots'];
@@ -257,13 +269,16 @@ class BaseCalendar
         //for implementation of date/day based slot detail in future
         $timeSlots = [];
         foreach ($timeSlotDetail as $slotDetail) {
+
             $start = $slotDetail['timeStart'];
             $end =  $slotDetail['timeEnd'];
             $interval = $slotDetail['interval'];
 
-            $startTime = strtotime($start);
-            $endTime = strtotime($end);
+            $startTimeObject = new \DateTime($date .' ' .$start, new \DateTimeZone($timezone));
+            $startTime = $startTimeObject->getTimestamp();
 
+            $endTimeObject = new \DateTime($date .' ' .$end, new \DateTimeZone($timezone));
+            $endTime = $endTimeObject->getTimestamp();
             if (!$startTime || !$endTime) {
                 continue;
             }
@@ -284,17 +299,22 @@ class BaseCalendar
             $intStartTime = $startTime;
             $intEndTime = $startTime;
             $intervalString = '+' . $interval . ' minutes';
-
+            $intEndTimeObject = new \DateTime();
+            $intEndTimeObject->setTimezone(new \DateTimeZone($timezone));
             while ($endTime > $intStartTime) {
-                $intEndTime = strtotime($intervalString, $intStartTime);
+                $intEndTimeObject->setTimestamp($intStartTime);
+                $intEndTimeObject->modify($intervalString);
+                $intEndTime = $intEndTimeObject->getTimestamp();
                 if ($intEndTime > $endTime) {
                     $intEndTime = $endTime;
                 }
                 //will ignore any time slots in the past
+
                 if ($intStartTime > $currentTime) {
-                    $timeSlots[date('H:i:s', $intStartTime) . '_' . date('H:i:s', $intEndTime)] = date('g:i a', $intStartTime) . ' - ' . date('g:i a', $intEndTime);
+                    $timeSlots[$startTimeObject->format('H:i:s') .'_' .$intEndTimeObject->format('H:i:s')] = $startTimeObject->format('H:i:s') .' - ' .$intEndTimeObject->format('H:i:s');
                 }
                 $intStartTime = $intEndTime;
+                $startTimeObject->setTimestamp($intStartTime);
             }
         }
 

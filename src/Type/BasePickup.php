@@ -100,7 +100,6 @@ class BasePickup extends BaseCalendar
                 $locationAsArray =(array)$location;
                 $calendarDetails = (array)$location->calendarDetails;
                 if (!empty($calendarDetails)) {
-                    $calendarDetails['startDate'] = isset($locationAsArray['pickupDate']) ? $locationAsArray['pickupDate'] : $calendarDetails['startDate'];
                     $defaultDate = $location->pickupDate/1000;
                     $locale = isset($carrierGroupDetail['locale']) ? $carrierGroupDetail['locale'] : null;
                     $deliveryDateFormat = $carrierRate->deliveryDateFormat;
