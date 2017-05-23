@@ -114,8 +114,6 @@ class BaseCalendar
                 $deliveryDateFormat,
                 $defaultDate
             );
-            $defaultDate = date($calendarDetails['dateFormat'], $defaultDate);
-            $calendarDetails['default_date'] = $defaultDate;
         }
 
         return $calendarDetails;
@@ -135,6 +133,12 @@ class BaseCalendar
         $calendarDetails['displayDateFormat'] = \ShipperHQ\Lib\Helper\Date::getCldrDateFormat($locale, $deliveryDateFormat);
         $calendarDetails['timezone'] = $carrierGroupDetail['timezone'];
         $calendarDetails['default_date_timestamp'] = $defaultDate;
+        //SHQ16-2041 pass default date in calendar details
+        $calendarDetails['default_date'] = $this->getDateFromTimestamp(
+            $defaultDate,
+            $calendarDetails['timezone'],
+            $calendarDetails['dateFormat']
+        );
         if ($calendarDetails['startDate'] != '') {
             $calendarDetails['start'] = $calendarDetails['startDate']/1000;
         } else {
@@ -311,7 +315,7 @@ class BaseCalendar
                 //will ignore any time slots in the past
 
                 if ($intStartTime > $currentTime) {
-                    $timeSlots[$startTimeObject->format('H:i:s') .'_' .$intEndTimeObject->format('H:i:s')] = $startTimeObject->format('H:i:s') .' - ' .$intEndTimeObject->format('H:i:s');
+                    $timeSlots[$startTimeObject->format('H:i') .'_' .$intEndTimeObject->format('H:i')] = $startTimeObject->format('H:i') .' - ' .$intEndTimeObject->format('H:i');
                 }
                 $intStartTime = $intEndTime;
                 $startTimeObject->setTimestamp($intStartTime);

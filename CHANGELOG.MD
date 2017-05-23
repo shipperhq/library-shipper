@@ -6,6 +6,11 @@
 
 **Merged pull requests:**
 
+- SHQ16-1967 [\#14](https://github.com/webshopapps/library-shipper/pull/14) ([wsagen](https://github.com/wsagen))
+- Develop [\#13](https://github.com/webshopapps/library-shipper/pull/13) ([wsajosh](https://github.com/wsajosh))
+- SHQ16-2041 use locale to set default date [\#12](https://github.com/webshopapps/library-shipper/pull/12) ([wsagen](https://github.com/wsagen))
+- SHQ16-2041 add default date to calendar details [\#11](https://github.com/webshopapps/library-shipper/pull/11) ([wsagen](https://github.com/wsagen))
+- SHQ16-2041 display time slots as HH:MM and exclude the seconds [\#10](https://github.com/webshopapps/library-shipper/pull/10) ([wsagen](https://github.com/wsagen))
 - SHQ16-2041 belt and braces on date options [\#9](https://github.com/webshopapps/library-shipper/pull/9) ([wsagen](https://github.com/wsagen))
 - Shq16 2032 [\#8](https://github.com/webshopapps/library-shipper/pull/8) ([wsagen](https://github.com/wsagen))
 - SHQ16-2023 modified time calculations in time slot logic [\#7](https://github.com/webshopapps/library-shipper/pull/7) ([wsagen](https://github.com/wsagen))
