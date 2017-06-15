@@ -1,11 +1,12 @@
 # Change Log
 
-## [Unreleased](https://github.com/webshopapps/library-shipper/tree/HEAD)
-
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.4...HEAD)
+## [20.1.5](https://github.com/webshopapps/library-shipper/tree/20.1.5) (2017-06-01)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.4...20.1.5)
 
 **Merged pull requests:**
 
+- SHQ16-2078 allow for not today and hours [\#16](https://github.com/webshopapps/library-shipper/pull/16) ([wsagen](https://github.com/wsagen))
+- SHQ16-2078 account for lead time in hours pushing first date to next day [\#15](https://github.com/webshopapps/library-shipper/pull/15) ([wsagen](https://github.com/wsagen))
 - SHQ16-1967 [\#14](https://github.com/webshopapps/library-shipper/pull/14) ([wsagen](https://github.com/wsagen))
 - Develop [\#13](https://github.com/webshopapps/library-shipper/pull/13) ([wsajosh](https://github.com/wsajosh))
 - SHQ16-2041 use locale to set default date [\#12](https://github.com/webshopapps/library-shipper/pull/12) ([wsagen](https://github.com/wsagen))

@@ -237,7 +237,6 @@ class BaseCalendar
 
     public function getDeliveryTimeSlots($calendarDetails, $date)
     {
-
         if (!isset($calendarDetails['timeSlots'])) {
             return false;
         }
@@ -246,18 +245,33 @@ class BaseCalendar
         $today = $this->getCurrentDate($timezone, $dateFormat);
 
         $isToday = false;
+        $selectedDate = $this->getDateFromTimestamp(
+            $calendarDetails['default_date_timestamp'],
+            $timezone,
+            $dateFormat
+        );
+
         if ($today == $date) {
             $isToday = true;
             //account for same day delivery with lead time in hours
             $exactStartTimeStamp = $calendarDetails['start'];
-            $selectedDate = $this->getDateFromTimestamp(
-                $calendarDetails['default_date_timestamp'],
-                $timezone,
-                $dateFormat
-            );
             if($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
                 $exactStartTimeStamp = $calendarDetails['default_date_timestamp'];
             }
+        }
+
+        $currentTime = 0;
+        //if we are generating slots for today, make sure we don't offer any in the past
+        //and we account for lead time in hours
+        if ($isToday) {
+            $currentTimeClass = new \DateTime("now", new \DateTimeZone($timezone));
+            $currentTime = $currentTimeClass->getTimestamp();
+            $currentTime = $currentTime > $exactStartTimeStamp ? $currentTime : $exactStartTimeStamp;
+        }
+        //if we are generating slots for the date that matches the default date, there may be lead time in hours,
+        //lets account for that by setting the currentTime to be the default_date_timestamp
+        if(!$isToday && $selectedDate == $date) {
+            $currentTime = $calendarDetails['default_date_timestamp'];
         }
 
         $timeSlotDetail = (array)$calendarDetails['timeSlots'];
@@ -285,15 +299,6 @@ class BaseCalendar
             $endTime = $endTimeObject->getTimestamp();
             if (!$startTime || !$endTime) {
                 continue;
-            }
-
-            $currentTime = 0;
-            //if we are generating slots for today, make sure we don't offer any in the past
-            //and we account for lead time in hours
-            if ($isToday) {
-                $currentTimeClass = new \DateTime("now", new \DateTimeZone($timezone));
-                $currentTime = $currentTimeClass->getTimestamp();
-                $currentTime = $currentTime > $exactStartTimeStamp ? $currentTime : $exactStartTimeStamp;
             }
 
             //if interval is half or full day then calculate those intervals
