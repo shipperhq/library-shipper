@@ -142,6 +142,24 @@ class BaseOption extends BaseCalendar
     {
         $options = (array)$carrierRate->availableOptions;
         $returnOptions = [];
+
+        //SHQ16-2178 store the selected options on the rate
+        $selections = [];
+        foreach ($carrierRate->rates as $rate) {
+            $rateArray = (array)$rate;
+            if (isset($rateArray['selectedOptions'])) {
+                foreach ($rateArray['selectedOptions'] as $option) {
+                    foreach ($option as $oneOption) {
+                        $selections[$oneOption->name] = $oneOption->value;
+                    }
+                }
+
+            }
+        }
+        if(!empty($selections)) {
+            $returnOptions['selections'] = $selections;
+        }
+
         if(!empty($options)) {
             $formatedOptions = [];
             foreach($options as $oneOption) {
@@ -151,7 +169,9 @@ class BaseOption extends BaseCalendar
                 $returnOption['show_' .$optionArray['code']] = true;
                 $returnOption[$optionArray['code'] .'_values'] = (array)$optionArray['values'];
                 $returnOption[$optionArray['code'] .'_type'] = $optionArray['availableOptionType'];
-                $returnOption[$optionArray['code'] .'_default_value'] = $optionArray['defaultOptionValue'];
+                //SHQ16-2178 use selected option as default value
+                $returnOption[$optionArray['code'] .'_default_value'] =
+                    isset($selections[$optionArray['code']]) ? $selections[$optionArray['code']] : $optionArray['defaultOptionValue'];
                 $formatedOptions[$optionArray['code']] = $returnOption;
             }
             $returnOptions['carrier_id'] = $carrierRate->carrierId;
@@ -159,6 +179,7 @@ class BaseOption extends BaseCalendar
             $returnOptions['selectedOption'] = [];
             $returnOptions['formatedOptions'] = $formatedOptions;
         }
+
         return $returnOptions;
     }
 }
