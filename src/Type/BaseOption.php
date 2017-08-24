@@ -94,7 +94,7 @@ class BaseOption extends BaseCalendar
         $this->checkoutService->cleanDownRates($cartId, $carrierCode, $carrierGroupId, $addressId);
         $addressArray = ['street' => $addressData->getStreet(), 'region' => $addressData->getRegion(),
             'region_id' => $addressData->getRegionId(), 'postcode' => $addressData->getPostcode(),
-            'country_id' => $addressData->getCountryId()];
+            'city' => $addressData->getCity(), 'country_id' => $addressData->getCountryId()];
         $rates = $this->checkoutService->reqeustShippingRates($cartId, $carrierCode, $carrierGroupId, $addressArray, $addressId);
         //need to do smart cleaning at this point
         $this->checkoutService->cleanDownSelectedData();
