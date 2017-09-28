@@ -142,6 +142,7 @@ class BaseOption extends BaseCalendar
     {
         $options = (array)$carrierRate->availableOptions;
         $returnOptions = [];
+        $this->checkForCustomerAccountOptions($carrierRate, $options);
 
         //SHQ16-2178 store the selected options on the rate
         $selections = [];
@@ -174,6 +175,7 @@ class BaseOption extends BaseCalendar
                     isset($selections[$optionArray['code']]) ? $selections[$optionArray['code']] : $optionArray['defaultOptionValue'];
                 $formatedOptions[$optionArray['code']] = $returnOption;
             }
+
             $returnOptions['carrier_id'] = $carrierRate->carrierId;
             $returnOptions['carrier_code'] = $carrierRate->carrierCode;
             $returnOptions['selectedOption'] = [];
@@ -181,5 +183,37 @@ class BaseOption extends BaseCalendar
         }
 
         return $returnOptions;
+    }
+
+    private function checkForCustomerAccountOptions($carrierRate, &$options)
+    {
+        //This should be server side and be included in the options sent
+        if($carrierRate->carrierType == 'customerAccount') {
+
+            $config = array(
+                array(
+                'name'  => 'Customer Carrier',
+                'code' => 'customer_carrier',
+                'availableOptionType' => 'TEXT',
+                'values' => null,
+                'defaultOptionValue' => ''
+                ),
+                array(
+                    'name'  => 'Customer Carrier Phone Number',
+                    'code' => 'customer_carrier_ph',
+                    'availableOptionType' => 'TEXT',
+                    'values' => null,
+                    'defaultOptionValue' => ''
+                ),
+                array(
+                    'name'  => 'Customer Carrier Account Number',
+                    'code' => 'customer_carrier_account',
+                    'availableOptionType' => 'TEXT',
+                    'values' => null,
+                    'defaultOptionValue' => ''
+                ),
+            );
+            $options = array_merge($options, $config);
+        }
     }
 }
