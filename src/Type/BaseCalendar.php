@@ -136,7 +136,7 @@ class BaseCalendar
         //SHQ16-2041 pass default date in calendar details
         $calendarDetails['default_date'] = $this->getDateFromTimestamp(
             $defaultDate,
-            $calendarDetails['timezone'],
+            'Europe/London', //SHQ16-2078 12th Oct - see Jira for details
             $calendarDetails['dateFormat']
         );
         if ($calendarDetails['startDate'] != '') {
@@ -245,11 +245,7 @@ class BaseCalendar
         $today = $this->getCurrentDate($timezone, $dateFormat);
 
         $isToday = false;
-        $selectedDate = $this->getDateFromTimestamp(
-            $calendarDetails['default_date_timestamp'],
-            $timezone,
-            $dateFormat
-        );
+        $selectedDate = $calendarDetails['default_date'];
 
         if ($today == $date) {
             $isToday = true;
