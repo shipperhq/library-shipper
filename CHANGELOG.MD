@@ -1,5 +1,12 @@
 # Change Log
 
+## [20.3.2](https://github.com/webshopapps/library-shipper/tree/20.3.2) (2017-11-07)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.3.1...20.3.2)
+
+**Merged pull requests:**
+
+- SHQ16-2392 ensure selected and default date are viable if not default… [\#21](https://github.com/webshopapps/library-shipper/pull/21) ([wsagen](https://github.com/wsagen))
+
 ## [20.3.1](https://github.com/webshopapps/library-shipper/tree/20.3.1) (2017-10-12)
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.3.0...20.3.1)
 
@@ -8,20 +15,20 @@
 - SHQ16-2078 [\#20](https://github.com/webshopapps/library-shipper/pull/20) ([wsagen](https://github.com/wsagen))
 
 ## [20.3.0](https://github.com/webshopapps/library-shipper/tree/20.3.0) (2017-09-28)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.9...20.3.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.2.0...20.3.0)
 
 **Merged pull requests:**
 
 - SHQ16-2231 process option config for customer account carrier [\#19](https://github.com/webshopapps/library-shipper/pull/19) ([wsagen](https://github.com/wsagen))
 
+## [20.2.0](https://github.com/webshopapps/library-shipper/tree/20.2.0) (2017-08-23)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.9...20.2.0)
+
 ## [20.1.9](https://github.com/webshopapps/library-shipper/tree/20.1.9) (2017-08-23)
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.8...20.1.9)
 
 ## [20.1.8](https://github.com/webshopapps/library-shipper/tree/20.1.8) (2017-08-23)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.2.0...20.1.8)
-
-## [20.2.0](https://github.com/webshopapps/library-shipper/tree/20.2.0) (2017-08-23)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.6...20.2.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.6...20.1.8)
 
 **Merged pull requests:**
 
