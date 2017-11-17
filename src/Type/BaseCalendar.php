@@ -178,8 +178,14 @@ class BaseCalendar
             $keys = array_keys($dateOptions);
             $calendarDetails['min_date'] = $keys[0];
             $calendarDetails['max_date'] = end($keys);
+            //SHQ16-2392 check the selected date is in the date options - if not then remove it and push the default date to the first available
+            //this is an issue for example if you change carriers selected on checkout, the previous carriers selected date
+            //may not be viable for this carrier
+            $isInDateOptions = in_array($calendarDetails['default_date'], $keys);
+            if(!$isInDateOptions) {
+                $calendarDetails['default_date'] = $calendarDetails['min_date'];
+            }
         }
-
         return $calendarDetails;
     }
 
@@ -251,6 +257,8 @@ class BaseCalendar
             $isToday = true;
             //account for same day delivery with lead time in hours
             $exactStartTimeStamp = $calendarDetails['start'];
+            //if we are calcuating time slots for the selected date and that date is today.
+            //need to now check that the current time is not AFTER the earliest possible start time (including any lead time in hours)
             if($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
                 $exactStartTimeStamp = $calendarDetails['default_date_timestamp'];
             }
@@ -331,7 +339,8 @@ class BaseCalendar
 
     public function getDateFromDate($date, $timezone, $dateFormat)
     {
-        $returnDate = $this->getDateFromTimestamp(strtotime($date), $timezone, $dateFormat);
+        //SHQ16-2417 correct black out dates to ignore time zone. This is just to reformat the dates correctly
+        $returnDate = $this->getDateFromTimestamp(strtotime($date),  'Europe/London', $dateFormat);
         return $returnDate;
     }
 
