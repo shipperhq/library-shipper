@@ -40,15 +40,21 @@ class BasePickup extends BaseCalendar
      * @var \ShipperHQ\Lib\Checkout\AbstractService
      */
     protected $checkoutService;
+    /**
+     * @var \ShipperHQ\Lib\AdminOrder\AbstractService
+     */
+    protected $adminOrderService;
 
     /**
      * AbstractService $calendarService
      * @codeCoverageIgnore
      */
     public function __construct(
-        \ShipperHQ\Lib\Checkout\AbstractService $checkoutService
+        \ShipperHQ\Lib\Checkout\AbstractService $checkoutService,
+        \ShipperHQ\Lib\AdminOrder\AbstractService $adminOrderService
     ) {
         $this->checkoutService = $checkoutService;
+        $this->adminOrderService = $adminOrderService;
     }
 
     /*
@@ -74,6 +80,40 @@ class BasePickup extends BaseCalendar
         $rates = $this->checkoutService->reqeustShippingRates($carrierCode, $carrierGroupId, $addressId);
         //need to do smart cleaning at this point
         $this->checkoutService->cleanDownSelectedData();
+        return $rates;
+    }
+
+    /*
+    * Process date select action
+    */
+    public function processPickupAdminDateSelect(
+        $locationSelected,
+        $dateSelected,
+        $carrierId,
+        $carrierCode,
+        $carrierGroupId,
+        $cartId
+    ) {
+        $params = $this->getLocationSelectSaveParameters(
+            $locationSelected,
+            $dateSelected,
+            $carrierId,
+            $carrierCode,
+            $carrierGroupId
+        );
+        $this->adminOrderService->saveSelectedData($params);
+        $this->adminOrderService->cleanDownRates($cartId, $carrierCode, $carrierGroupId);
+        try {
+            $rates = $this->adminOrderService->reqeustShippingRates(
+                $cartId,
+                $carrierCode,
+                $carrierGroupId
+            );
+        } catch (\Exception $e) {
+            //handle so we can clean down rates if necessary
+        }
+        //need to do smart cleaning at this point
+        $this->adminOrderService->cleanDownSelectedData();
         return $rates;
     }
 
