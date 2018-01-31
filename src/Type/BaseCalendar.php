@@ -117,6 +117,17 @@ class BaseCalendar
         return $rates;
     }
 
+    public function saveDateSelectOnCheckoutProceed($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
+    {
+        $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);
+        $this->checkoutService->saveSelectedData($params);
+    }
+
+    public function resetDateSelectOnCheckoutProceed()
+    {
+        $this->checkoutService->cleanDownSelectedData();
+    }
+
     public function getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
     {
         $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
@@ -203,7 +214,6 @@ class BaseCalendar
                 $calendarDetails['display_time_slots'] = false;
                 $calendarDetails['showTimeslots'] = false;
             }
-
         }
         $calendarDetails['allowed_dates'] = $dateOptions;
         if (!empty($dateOptions)) { //SHQ16-2041
@@ -214,7 +224,7 @@ class BaseCalendar
             //this is an issue for example if you change carriers selected on checkout, the previous carriers selected date
             //may not be viable for this carrier
             $isInDateOptions = in_array($calendarDetails['default_date'], $keys);
-            if(!$isInDateOptions) {
+            if (!$isInDateOptions) {
                 $calendarDetails['default_date'] = $calendarDetails['min_date'];
             }
         }
@@ -291,7 +301,7 @@ class BaseCalendar
             $exactStartTimeStamp = $calendarDetails['start'];
             //if we are calcuating time slots for the selected date and that date is today.
             //need to now check that the current time is not AFTER the earliest possible start time (including any lead time in hours)
-            if($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
+            if ($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
                 $exactStartTimeStamp = $calendarDetails['default_date_timestamp'];
             }
         }
@@ -306,7 +316,7 @@ class BaseCalendar
         }
         //if we are generating slots for the date that matches the default date, there may be lead time in hours,
         //lets account for that by setting the currentTime to be the default_date_timestamp
-        if(!$isToday && $selectedDate == $date) {
+        if (!$isToday && $selectedDate == $date) {
             $currentTime = $calendarDetails['default_date_timestamp'];
         }
 
@@ -323,7 +333,6 @@ class BaseCalendar
         //for implementation of date/day based slot detail in future
         $timeSlots = [];
         foreach ($timeSlotDetail as $slotDetail) {
-
             $start = $slotDetail['timeStart'];
             $end =  $slotDetail['timeEnd'];
             $interval = $slotDetail['interval'];
@@ -372,7 +381,7 @@ class BaseCalendar
     public function getDateFromDate($date, $timezone, $dateFormat)
     {
         //SHQ16-2417 correct black out dates to ignore time zone. This is just to reformat the dates correctly
-        $returnDate = $this->getDateFromTimestamp(strtotime($date),  'Europe/London', $dateFormat);
+        $returnDate = $this->getDateFromTimestamp(strtotime($date), 'Europe/London', $dateFormat);
         return $returnDate;
     }
 

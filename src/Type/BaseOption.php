@@ -119,10 +119,10 @@ class BaseOption extends BaseCalendar
     ) {
 
         $shippingOptions = [];
-        foreach(self::$shippingOptions as $option) {
+        foreach (self::$shippingOptions as $option) {
             //destination type is case sensitive in SHQ
-            if(isset($optionValues[$option]) && $optionValues[$option] != '') {
-                $shippingOptions[] = array('name'=> $option, 'value' => strtolower($optionValues[$option]));
+            if (isset($optionValues[$option]) && $optionValues[$option] != '') {
+                $shippingOptions[] = ['name'=> $option, 'value' => strtolower($optionValues[$option])];
             }
         }
         $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
@@ -154,16 +154,15 @@ class BaseOption extends BaseCalendar
                         $selections[$oneOption->name] = $oneOption->value;
                     }
                 }
-
             }
         }
-        if(!empty($selections)) {
+        if (!empty($selections)) {
             $returnOptions['selections'] = $selections;
         }
 
-        if(!empty($options)) {
+        if (!empty($options)) {
             $formatedOptions = [];
-            foreach($options as $oneOption) {
+            foreach ($options as $oneOption) {
                 //we should be more dynamic here e.g.
                 $optionArray = (array)$oneOption;
                 $returnOption = [];
@@ -188,31 +187,30 @@ class BaseOption extends BaseCalendar
     private function checkForCustomerAccountOptions($carrierRate, &$options)
     {
         //This should be server side and be included in the options sent
-        if($carrierRate->carrierType == 'customerAccount') {
-
-            $config = array(
-                array(
+        if ($carrierRate->carrierType == 'customerAccount') {
+            $config = [
+                [
                 'name'  => 'Customer Carrier',
                 'code' => 'customer_carrier',
                 'availableOptionType' => 'TEXT',
                 'values' => null,
                 'defaultOptionValue' => ''
-                ),
-                array(
+                ],
+                [
                     'name'  => 'Customer Carrier Phone Number',
                     'code' => 'customer_carrier_ph',
                     'availableOptionType' => 'TEXT',
                     'values' => null,
                     'defaultOptionValue' => ''
-                ),
-                array(
+                ],
+                [
                     'name'  => 'Customer Carrier Account Number',
                     'code' => 'customer_carrier_account',
                     'availableOptionType' => 'TEXT',
                     'values' => null,
                     'defaultOptionValue' => ''
-                ),
-            );
+                ],
+            ];
             $options = array_merge($options, $config);
         }
     }
