@@ -289,6 +289,7 @@ class BaseCalendar
             return false;
         }
         $timezone = $calendarDetails['timezone'];
+        $timezoneObj = new \DateTimeZone($timezone);
         $dateFormat = $calendarDetails['dateFormat'];
         $today = $this->getCurrentDate($timezone, $dateFormat);
 
@@ -310,9 +311,9 @@ class BaseCalendar
         //if we are generating slots for today, make sure we don't offer any in the past
         //and we account for lead time in hours
         if ($isToday) {
-            $currentTimeClass = new \DateTime("now", new \DateTimeZone($timezone));
+            $currentTimeClass = new \DateTime("now", $timezoneObj);
             $currentTime = $currentTimeClass->getTimestamp();
-            $currentTime = $currentTime > $exactStartTimeStamp ? $currentTime : $exactStartTimeStamp;
+            $currentTime = max($currentTime, $exactStartTimeStamp);
         }
         //if we are generating slots for the date that matches the default date, there may be lead time in hours,
         //lets account for that by setting the currentTime to be the default_date_timestamp
@@ -321,6 +322,7 @@ class BaseCalendar
         }
 
         $timeSlotDetail = (array)$calendarDetails['timeSlots'];
+
         $sortTime = [];
         foreach ($timeSlotDetail as $key => $val) {
             $values = (array)$val;
@@ -333,48 +335,56 @@ class BaseCalendar
         //for implementation of date/day based slot detail in future
         $timeSlots = [];
         foreach ($timeSlotDetail as $slotDetail) {
-            $start = $slotDetail['timeStart'];
-            $end =  $slotDetail['timeEnd'];
-            $interval = $slotDetail['interval'];
-
-            $startTimeObject = new \DateTime($date .' ' .$start, new \DateTimeZone($timezone));
-            $startTime = $startTimeObject->getTimestamp();
-
-            $endTimeObject = new \DateTime($date .' ' .$end, new \DateTimeZone($timezone));
-            $endTime = $endTimeObject->getTimestamp();
-            if (!$startTime || !$endTime) {
+            // If we dont have all our datapoints then drop the slot
+            if (!isset($slotDetail['timeStart'], $slotDetail['timeEnd'], $slotDetail['interval'])) {
                 continue;
             }
 
+            // Setup slot boundaries and interval
+            $slotStartTime = new \DateTime($date . ' ' .$slotDetail['timeStart'], $timezoneObj);
+            $slotEndTime = new \DateTime($date . ' ' .$slotDetail['timeEnd'], $timezoneObj);
+            $interval = $slotDetail['interval'];
+
             //if interval is half or full day then calculate those intervals
             if ($interval <= 2) {
-                $interval = (($endTime - $startTime)/60)/$interval;
+                $dayLengthInMins = ($slotEndTime->getTimestamp() - $slotStartTime->getTimestamp() ) / 60;
+                $interval = $dayLengthInMins / $interval;
             }
-            $intStartTime = $startTime;
-            $intEndTime = $startTime;
-            $intervalString = '+' . $interval . ' minutes';
-            $intEndTimeObject = new \DateTime();
-            $intEndTimeObject->setTimezone(new \DateTimeZone($timezone));
-            while ($endTime > $intStartTime) {
-                $intEndTimeObject->setTimestamp($intStartTime);
-                $intEndTimeObject->modify($intervalString);
-                $intEndTime = $intEndTimeObject->getTimestamp();
-                if ($intEndTime > $endTime) {
-                    $intEndTime = $endTime;
-                }
-                //will ignore any time slots in the past
 
-                if ($intStartTime > $currentTime) {
-                    $timeSlots[$startTimeObject->format('H:i') .'_' .$intEndTimeObject->format('H:i')] = $startTimeObject->format('H:i') .' - ' .$intEndTimeObject->format('H:i');
-                }
-                $intStartTime = $intEndTime;
-                $startTimeObject->setTimestamp($intStartTime);
+            // If end time < start time (slot runs overnight) then clamp it to midnight
+            if ($slotEndTime <= $slotStartTime) {
+                $slotEndTime->setTime(24, 00);
             }
+
+            for ($e = clone ($s = clone $slotStartTime); $s < $slotEndTime; $s->setTimestamp($e->getTimestamp())) {
+                // EndTime = StartTime + Interval
+                $e->setTimestamp($s->getTimestamp())
+                    ->modify("+ $interval minutes");
+                // Don't let end of slot overrun our hard ceiling
+                if ($e > $slotEndTime) {
+                    $e->setTimestamp($slotEndTime->getTimestamp());
+                }
+
+                // If the timeslot has already passed, then move on
+                if ($s->getTimestamp() < $currentTime) {
+                    continue;
+                }
+
+                $intervalStartStr = $s->format('H:i');
+                $intervalEndStr = $e->format('H:i');
+                $intervalEndStr = ($intervalEndStr === "00:00") ? "24:00" : $intervalEndStr;
+                $key = "{$intervalStartStr}_{$intervalEndStr}";
+                $value = "{$intervalStartStr} - {$intervalEndStr}";
+
+                $timeSlots[$key] = $value;
+            }
+            unset ($e, $s); // Paranoia
         }
 
         if (count($timeSlots) == 0) {
             return false;
         }
+        ksort($timeSlots);
         return $timeSlots;
     }
 
