@@ -115,6 +115,19 @@ class Helper
         return $validStatus;
     }
 
+    public function extractValidatedAddress($rateResponse)
+    {
+        $validatedAddress = false;
+        if (isset($rateResponse->addressValidationResponse)) {
+            $avResponse = $rateResponse->addressValidationResponse;
+            if (!isset($avResponse->suggestedAddresses) || count($avResponse->suggestedAddresses) !== 1) {
+                return $validatedAddress;
+            }
+            $validatedAddress = is_array($avResponse->suggestedAddresses) ? $avResponse->suggestedAddresses[0] : false;
+        }
+        return $validatedAddress;
+    }
+
     public function extractCarrierGroupDetail($carrierGroup, $transactionId, $configSettings)
     {
         $carrierGroupDetail = (array)$carrierGroup->carrierGroupDetail;
