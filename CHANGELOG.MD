@@ -1,5 +1,13 @@
 # Change Log
 
+## [20.6.2](https://github.com/webshopapps/library-shipper/tree/20.6.2) (2018-04-13)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.6.1...20.6.2)
+
+**Merged pull requests:**
+
+- SHQ18-196 Add missing composer version number [\#29](https://github.com/webshopapps/library-shipper/pull/29) ([TravisBernard](https://github.com/TravisBernard))
+- SHQ18-169 only reset selected date when returning on checkout [\#28](https://github.com/webshopapps/library-shipper/pull/28) ([wsagen](https://github.com/wsagen))
+
 ## [20.6.1](https://github.com/webshopapps/library-shipper/tree/20.6.1) (2018-03-19)
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.6.0...20.6.1)
 
@@ -8,17 +16,17 @@
 - SHQ18-141 process validated address [\#27](https://github.com/webshopapps/library-shipper/pull/27) ([wsagen](https://github.com/wsagen))
 
 ## [20.6.0](https://github.com/webshopapps/library-shipper/tree/20.6.0) (2018-03-13)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.5.2...20.6.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.5.0...20.6.0)
 
 **Merged pull requests:**
 
 - SHQ18-104 Handle timeslots ending at midnight [\#26](https://github.com/webshopapps/library-shipper/pull/26) ([TravisBernard](https://github.com/TravisBernard))
 
-## [20.5.2](https://github.com/webshopapps/library-shipper/tree/20.5.2) (2017-12-06)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.5.0...20.5.2)
-
 ## [20.5.0](https://github.com/webshopapps/library-shipper/tree/20.5.0) (2017-12-06)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.4.0...20.5.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.5.2...20.5.0)
+
+## [20.5.2](https://github.com/webshopapps/library-shipper/tree/20.5.2) (2017-12-06)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.4.0...20.5.2)
 
 **Merged pull requests:**
 
@@ -54,30 +62,30 @@
 - SHQ16-2078 [\#20](https://github.com/webshopapps/library-shipper/pull/20) ([wsagen](https://github.com/wsagen))
 
 ## [20.3.0](https://github.com/webshopapps/library-shipper/tree/20.3.0) (2017-09-28)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.9...20.3.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.8...20.3.0)
 
 **Merged pull requests:**
 
 - SHQ16-2231 process option config for customer account carrier [\#19](https://github.com/webshopapps/library-shipper/pull/19) ([wsagen](https://github.com/wsagen))
 
-## [20.1.9](https://github.com/webshopapps/library-shipper/tree/20.1.9) (2017-08-23)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.2.0...20.1.9)
+## [20.1.8](https://github.com/webshopapps/library-shipper/tree/20.1.8) (2017-08-23)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.2.0...20.1.8)
 
 ## [20.2.0](https://github.com/webshopapps/library-shipper/tree/20.2.0) (2017-08-23)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.8...20.2.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.9...20.2.0)
 
-## [20.1.8](https://github.com/webshopapps/library-shipper/tree/20.1.8) (2017-08-23)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.7...20.1.8)
+## [20.1.9](https://github.com/webshopapps/library-shipper/tree/20.1.9) (2017-08-23)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.6...20.1.9)
 
 **Merged pull requests:**
 
 - SHQ16-2238 include city field in option rate request [\#18](https://github.com/webshopapps/library-shipper/pull/18) ([wsagen](https://github.com/wsagen))
 
-## [20.1.7](https://github.com/webshopapps/library-shipper/tree/20.1.7) (2017-08-07)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.6...20.1.7)
-
 ## [20.1.6](https://github.com/webshopapps/library-shipper/tree/20.1.6) (2017-08-07)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.5...20.1.6)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.7...20.1.6)
+
+## [20.1.7](https://github.com/webshopapps/library-shipper/tree/20.1.7) (2017-08-07)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.5...20.1.7)
 
 **Merged pull requests:**
 
@@ -115,13 +123,13 @@
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.1...20.1.2)
 
 ## [20.1.1](https://github.com/webshopapps/library-shipper/tree/20.1.1) (2016-10-31)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.0...20.1.1)
-
-## [20.1.0](https://github.com/webshopapps/library-shipper/tree/20.1.0) (2016-10-24)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.14...20.1.0)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.14...20.1.1)
 
 ## [20.0.14](https://github.com/webshopapps/library-shipper/tree/20.0.14) (2016-10-24)
-[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.13...20.0.14)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.1.0...20.0.14)
+
+## [20.1.0](https://github.com/webshopapps/library-shipper/tree/20.1.0) (2016-10-24)
+[Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.13...20.1.0)
 
 ## [20.0.13](https://github.com/webshopapps/library-shipper/tree/20.0.13) (2016-10-14)
 [Full Changelog](https://github.com/webshopapps/library-shipper/compare/20.0.12...20.0.13)

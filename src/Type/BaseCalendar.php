@@ -125,7 +125,7 @@ class BaseCalendar
 
     public function resetDateSelectOnCheckoutProceed()
     {
-        $this->checkoutService->cleanDownSelectedData();
+        $this->checkoutService->cleanDownSelectedData(['SelectedDate']);
     }
 
     public function getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
