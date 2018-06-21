@@ -49,7 +49,10 @@ class BaseOption extends BaseCalendar
         'notify_required',
         'inside_delivery',
         'destination_type',
-        'limited_delivery'
+        'limited_delivery',
+        'customer_carrier',
+        'customer_carrier_account',
+        'customer_carrier_ph'
     ];
 
 
