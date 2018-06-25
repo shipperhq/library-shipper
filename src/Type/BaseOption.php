@@ -128,11 +128,22 @@ class BaseOption extends BaseCalendar
                 $shippingOptions[] = ['name'=> $option, 'value' => strtolower($optionValues[$option])];
             }
         }
-        $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
-        $selections->setSelectedOptions($shippingOptions);
+        $selections = [
+            'CarrierGroupId' => $carrierGroupId,
+            'CarrierId' => $carrierId,
+            'CarrierCode' => $carrierCode,
+            'SelectedOptions' => $shippingOptions
+        ];
 
         return $selections;
     }
+    
+    public function saveOptionSelectOnCheckoutProceed($checkoutSelection, $carrierId, $carrierCode, $carrierGroupId)
+    {
+        $params = $this->getOptionSelectSaveParameters($checkoutSelection, $carrierId, $carrierCode, $carrierGroupId);
+        $this->checkoutService->saveSelectedData($params);
+    }
+
 
     /**
      * Extract option details from rate response

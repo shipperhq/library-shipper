@@ -6,3 +6,7 @@ SHQ16-2392 added comments and refactored unit tests, added tests for calendarDet
 Bring releases and versioning back in line
 
 
+## 20.8.0 (2018-06-25)
+SHQ18-277 refactor save selections functions to reuse selection object
+
+

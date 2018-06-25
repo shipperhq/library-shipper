@@ -124,10 +124,13 @@ class BasePickup extends BaseCalendar
         $carrierCode,
         $carrierGroupId
     ) {
-        $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
-        $selections->setSelectedLocation($locationSelected);
-        $selections->setSelectedDate($dateSelected);
-
+        $selections = [
+            'CarrierGroupId' => $carrierGroupId,
+            'CarrierId' => $carrierId,
+            'CarrierCode' => $carrierCode,
+            'SelectedLocation' => $locationSelected,
+            'SelectedDate' => $dateSelected
+        ];
         return $selections;
     }
 

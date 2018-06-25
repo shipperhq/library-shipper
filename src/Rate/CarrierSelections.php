@@ -49,7 +49,7 @@ class CarrierSelections
      * @param $carrierCode
      * @param $carrierId
      */
-    public function __construct($carrierGroupId, $carrierCode, $carrierId)
+    public function __construct($carrierGroupId = '', $carrierCode = '', $carrierId = '')
     {
         $this->carrierGroupId = $carrierGroupId;
         $this->carrierCode = $carrierCode;

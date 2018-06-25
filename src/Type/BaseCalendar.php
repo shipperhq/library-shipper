@@ -130,9 +130,12 @@ class BaseCalendar
 
     public function getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
     {
-        $selections = new \ShipperHQ\Lib\Rate\CarrierSelections($carrierGroupId, $carrierCode, $carrierId);
-        $selections->setSelectedDate($dateSelected);
-
+        $selections = [
+            'CarrierGroupId' => $carrierGroupId,
+            'CarrierId' => $carrierId,
+            'CarrierCode' => $carrierCode,
+            'SelectedDate' => $dateSelected
+        ];
         return $selections;
     }
 
