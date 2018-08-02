@@ -162,6 +162,10 @@ class BasePickup extends BaseCalendar
                 $locationAsArray['carrier_id'] = $carrierRate->carrierId;
                 $locationAsArray['carrier_code'] = $carrierRate->carrierCode;
                 $locationAsArray['distanceUnit'] = $carrierGroupDetail['distanceUnit'];
+                $locationAsArray['showMap'] = $locationDetails['showMap'];
+                $locationAsArray['showOpeningHours']  = $locationDetails['showOpeningHours'];
+                $locationAsArray['showAddress']   = $locationDetails['showAddress'];
+                $locationAsArray['googleApiKey']   = $locationDetails['googleApiKey'];
                 $locationsAvailable[$location->pickupId] = $locationAsArray;
             }
         }

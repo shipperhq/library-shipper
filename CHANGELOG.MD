@@ -10,3 +10,7 @@ Bring releases and versioning back in line
 SHQ18-277 refactor save selections functions to reuse selection object
 
 
+## 20.9.0 (2018-08-02)
+SHQ18-155 support map and location details for in store pickup
+
+
