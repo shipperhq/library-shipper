@@ -59,7 +59,7 @@ class Helper
     public function __construct(
         \ShipperHQ\Lib\Helper\Date $dateHelper
     ) {
-    
+
         $this->dateHelper = $dateHelper;
     }
 
@@ -86,7 +86,7 @@ class Helper
         $globals = (array)$rateResponse->globalSettings;
         return $globals;
     }
-    
+
     public function extractDestinationType($rateResponse)
     {
         $addressType = false;
@@ -170,9 +170,45 @@ class Helper
                 $config,
                 $splitCarrierGroupDetail
             );
+
+			//SHQ18-1613 If rate shopped method, look for actual method code and name
+			foreach ($carrierRate->rates as $oneRate) {
+				if (isset($oneRate->rateBreakdownList) && count($oneRate->rateBreakdownList) > 0) {
+					$rateBreakdown = $oneRate->rateBreakdownList;
+					$actualCarrierCode = $oneRate->carrierCode;
+					$actualShippingRate = $oneRate->totalCharges;
+					$carrierGroupShippingDetail = [];
+
+					foreach ($rateBreakdown as $candidateActualRate) {
+						if ($candidateActualRate->carrierCode == $actualCarrierCode
+							&& $actualShippingRate == $candidateActualRate->totalCharges) {
+							$carrierGroupShippingDetail['carrier_code'] = $candidateActualRate->carrierCode;
+							$carrierGroupShippingDetail['methodTitle'] = $candidateActualRate->name;
+							$carrierGroupShippingDetail['carrierType'] = $candidateActualRate->carrierType;
+							$carrierGroupShippingDetail['code'] = $candidateActualRate->methodCode;
+							$carrierGroupShippingDetail['carrierTitle'] = $oneRate->carrierTitle;
+							$carrierGroupShippingDetail['carrierName'] = $oneRate->carrierTitle;
+						}
+					}
+
+					foreach ($thisCarriersRates as $key => $rateToAdd) {
+						if ($rateToAdd['methodcode'] != $oneRate->code) {
+							continue;
+						}
+						$rateToAdd['carriergroup_detail'] = array_merge($rateToAdd['carriergroup_detail'],$carrierGroupShippingDetail);
+						$thisCarriersRates[$key] = $rateToAdd;
+					}
+
+				}
+			}
+
             $carrierResultWithRates['rates'] = $thisCarriersRates;
             $thisCarriersShipments = $this->populateShipments($carrierRate, $carrierGroupDetail);
             $carrierResultWithRates['shipments'] = $thisCarriersShipments;
+        }
+
+        if (isset($carrierRate->customDescription) && !empty($carrierRate->customDescription)) {
+            $carrierResultWithRates['custom_description'] = $carrierRate->customDescription;
         }
 
         return $carrierResultWithRates;
@@ -253,7 +289,7 @@ class Helper
                 $oneRate->name . ' (' . $carrierGroupDetail['transaction'] . ')'
                 : $oneRate->name;
 
-            $this->populateRateLevelDetails((array)$oneRate, $carrierGroupDetail, $baseRate);
+            $this->populateRateLevelDetails((array)$oneRate, $carrierGroupDetail, $baseRate, $config->getHideNotifications());
 
             $this->populateRateDeliveryDetails(
                 (array)$oneRate,
@@ -327,11 +363,13 @@ class Helper
         $carrierGroupDetail['custom_description'] = $customDescription;
     }
 
-    public function populateRateLevelDetails($rate, &$carrierGroupDetail, $currencyConversionRate)
+    public function populateRateLevelDetails($rate, &$carrierGroupDetail, $currencyConversionRate, $hideNotifications)
     {
         $carrierGroupDetail['methodTitle'] = $rate['name'];
         $carrierGroupDetail['price'] = (float)$rate['totalCharges']*$currencyConversionRate;
         $carrierGroupDetail['cost'] = (float)$rate['shippingPrice']*$currencyConversionRate;
+        $carrierGroupDetail['customDuties'] = (float)$rate['customDuties']*$currencyConversionRate;
+        $carrierGroupDetail['hideNotifications'] = $hideNotifications;
         $carrierGroupDetail['code'] = $rate['code'];
         if (isset($rate['selectedOptions'])) {
             $selectedOptions =  (array)$rate['selectedOptions'];

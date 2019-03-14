@@ -14,3 +14,7 @@ SHQ18-277 refactor save selections functions to reuse selection object
 SHQ18-155 support map and location details for in store pickup
 
 
+## 20.10.0 (2019-03-14)
+SHQ18-1613 Display actual method chosen by rate shopping in admin panel
+
+
