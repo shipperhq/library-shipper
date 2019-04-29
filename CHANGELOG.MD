@@ -18,3 +18,7 @@ SHQ18-155 support map and location details for in store pickup
 SHQ18-1613 Display actual method chosen by rate shopping in admin panel
 
 
+## 20.10.1 (2019-04-29)
+SHQ18-1675 Added support for the new TimeSlotBreakDown field
+
+

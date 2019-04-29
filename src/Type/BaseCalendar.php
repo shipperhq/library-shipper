@@ -196,11 +196,15 @@ class BaseCalendar
         if (count($dateOptions)>0) {
             $deliveryDatesAndTimes = [];
             if (isset($calendarDetails['timeSlots']) && !empty($calendarDetails['timeSlots'])) {
-                foreach ($dateOptions as $dateKey => $date) {
-                    if ($slotsFound = $this->getDeliveryTimeSlots($calendarDetails, $dateKey)) {
-                        $deliveryDatesAndTimes[$dateKey] = $slotsFound;
-                    } else {
-                        unset($dateOptions[$dateKey]);
+                if (isset($calendarDetails['timeSlotBreakdown']) && !empty($calendarDetails['timeSlotBreakdown'])) {
+                    $deliveryDatesAndTimes[$calendarDetails['default_date']] = $this->timeSlotBreakdownListToSlotList($calendarDetails['timeSlotBreakdown']);
+                } else {
+                    foreach ($dateOptions as $dateKey => $date) {
+                        if ($slotsFound = $this->getDeliveryTimeSlots($calendarDetails, $dateKey)) {
+                            $deliveryDatesAndTimes[$dateKey] = $slotsFound;
+                        } else {
+                            unset($dateOptions[$dateKey]);
+                        }
                     }
                 }
             }
@@ -284,6 +288,24 @@ class BaseCalendar
             $countDays++;
         }
         return $dateOptions;
+    }
+
+    public function timeSlotBreakdownListToSlotList($timeSlotBreakdownList) {
+        $timeSlots = [];
+        foreach ($timeSlotBreakdownList as $timeSlotBreakdown) {
+            $key = $this->timeSlotBreakdownToSlotKey($timeSlotBreakdown);
+            $value = $this->timeSlotBreakdownToSlotValue($timeSlotBreakdown);
+            $timeSlots[$key] = $value;
+        }
+        return $timeSlots;
+    }
+
+    public function timeSlotBreakdownToSlotKey($timeSlotBreakdown) {
+        return "{$timeSlotBreakdown->timeStart}_{$timeSlotBreakdown->timeEnd}";
+    }
+
+    public function timeSlotBreakdownToSlotValue($timeSlotBreakdown) {
+        return "{$timeSlotBreakdown->timeStart} - {$timeSlotBreakdown->timeEnd}";
     }
 
     public function getDeliveryTimeSlots($calendarDetails, $date)
