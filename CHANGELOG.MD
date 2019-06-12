@@ -22,3 +22,7 @@ SHQ18-1613 Display actual method chosen by rate shopping in admin panel
 SHQ18-1675 Added support for the new TimeSlotBreakDown field
 
 
+## 20.11.0 (2019-06-12)
+SHQ18-2107 Support for allowed methods for multiple API keys on one store
+
+

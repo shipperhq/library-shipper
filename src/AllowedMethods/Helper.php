@@ -36,32 +36,40 @@ namespace ShipperHQ\Lib\AllowedMethods;
  */
 class Helper
 {
-
-    public function extractAllowedMethodsAndCarrierConfig($allowedMethodResponse, &$allowedMethods)
+    /**
+     * @param $allAllowedMethodResponse array containing allowed method responses for each saved API key
+     * @param $allowedMethods array that processed allowed methods are saved to
+     *
+     * @return array
+     */
+    public function extractAllowedMethodsAndCarrierConfig($allAllowedMethodResponse, &$allowedMethods)
     {
-        $returnedMethods = $allowedMethodResponse->carrierMethods;
-
         $carrierConfig = [];
 
-        foreach ($returnedMethods as $carrierMethod) {
-            $methodList = $carrierMethod->methods;
-            $methodCodeArray = [];
+        if (!is_array($allAllowedMethodResponse)) {
+            $allAllowedMethodResponse = array($allAllowedMethodResponse);
+        }
 
-            foreach ($methodList as $method) {
-                $allowedMethodCode = $method->methodCode;
-                $allowedMethodCode = preg_replace('/&|;| /', "_", $allowedMethodCode);
-
-                if (!array_key_exists($allowedMethodCode, $allowedMethods)) {
-                    $methodCodeArray[$allowedMethodCode] = $method->name;
+        foreach ($allAllowedMethodResponse as $allowedMethodResponse) {
+            $returnedMethods = $allowedMethodResponse->carrierMethods;
+            foreach ($returnedMethods as $carrierMethod) {
+                $methodList = $carrierMethod->methods;
+                $methodCodeArray = [];
+                foreach ($methodList as $method) {
+                    $allowedMethodCode = $method->methodCode;
+                    $allowedMethodCode = preg_replace('/&|;| /', "_", $allowedMethodCode);
+                    if (!array_key_exists($allowedMethodCode, $allowedMethods)) {
+                        $methodCodeArray[$allowedMethodCode] = $method->name;
+                    }
+                }
+                $allowedMethods[$carrierMethod->carrierCode] = $methodCodeArray;
+                $carrierConfig[$carrierMethod->carrierCode]['title'] = $carrierMethod->title;
+                if (isset($carrierMethod->sortOrder)) {
+                    $carrierConfig[$carrierMethod->carrierCode]['sortOrder'] = $carrierMethod->sortOrder;
                 }
             }
-
-            $allowedMethods[$carrierMethod->carrierCode] = $methodCodeArray;
-            $carrierConfig[$carrierMethod->carrierCode]['title'] = $carrierMethod->title;
-            if (isset($carrierMethod->sortOrder)) {
-                $carrierConfig[$carrierMethod->carrierCode]['sortOrder'] = $carrierMethod->sortOrder;
-            }
         }
+
         return $carrierConfig;
     }
 

@@ -369,6 +369,7 @@ class Helper
         $carrierGroupDetail['price'] = (float)$rate['totalCharges']*$currencyConversionRate;
         $carrierGroupDetail['cost'] = (float)$rate['shippingPrice']*$currencyConversionRate;
         $carrierGroupDetail['customDuties'] = (float)$rate['customDuties']*$currencyConversionRate;
+        $carrierGroupDetail['customsMessage'] = $rate['customsMessage'];
         $carrierGroupDetail['hideNotifications'] = $hideNotifications;
         $carrierGroupDetail['code'] = $rate['code'];
         if (isset($rate['selectedOptions'])) {
