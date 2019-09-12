@@ -26,3 +26,7 @@ SHQ18-1675 Added support for the new TimeSlotBreakDown field
 SHQ18-2107 Support for allowed methods for multiple API keys on one store
 
 
+## 20.11.1 (2019-09-12)
+SHQ18-2587/SHQ18-2613 Add price less fees to rates where available
+
+

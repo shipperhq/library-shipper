@@ -320,6 +320,7 @@ class Helper
                 'currency' => $oneRate->currency,
                 'carrier_type' => $carrierType,
                 'carrier_id' => $carrierRate->carrierId,
+                'nypAmount' => $oneRate->cost,
             ];
             if (isset($carrierGroupDetail['dispatch_date'])) {
                 $rateToAdd['dispatch_date'] = $carrierGroupDetail['dispatch_date'];
@@ -368,6 +369,7 @@ class Helper
         $carrierGroupDetail['methodTitle'] = $rate['name'];
         $carrierGroupDetail['price'] = (float)$rate['totalCharges']*$currencyConversionRate;
         $carrierGroupDetail['cost'] = (float)$rate['shippingPrice']*$currencyConversionRate;
+        $carrierGroupDetail['rate_cost'] = (float)$rate['cost']*$currencyConversionRate;
         $carrierGroupDetail['customDuties'] = (float)$rate['customDuties']*$currencyConversionRate;
         $carrierGroupDetail['customsMessage'] = $rate['customsMessage'];
         $carrierGroupDetail['hideNotifications'] = $hideNotifications;
