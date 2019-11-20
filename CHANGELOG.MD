@@ -30,3 +30,7 @@ SHQ18-2107 Support for allowed methods for multiple API keys on one store
 SHQ18-2587/SHQ18-2613 Add price less fees to rates where available
 
 
+## 20.12.0 (2019-11-20)
+SHQ18-2869 Process rate response as array
+
+

@@ -51,21 +51,21 @@ class Helper
         }
 
         foreach ($allAllowedMethodResponse as $allowedMethodResponse) {
-            $returnedMethods = $allowedMethodResponse->carrierMethods;
+            $returnedMethods = $allowedMethodResponse['carrierMethods'];
             foreach ($returnedMethods as $carrierMethod) {
-                $methodList = $carrierMethod->methods;
+                $methodList = $carrierMethod['methods'];
                 $methodCodeArray = [];
                 foreach ($methodList as $method) {
-                    $allowedMethodCode = $method->methodCode;
+                    $allowedMethodCode = $method['methodCode'];
                     $allowedMethodCode = preg_replace('/&|;| /', "_", $allowedMethodCode);
                     if (!array_key_exists($allowedMethodCode, $allowedMethods)) {
-                        $methodCodeArray[$allowedMethodCode] = $method->name;
+                        $methodCodeArray[$allowedMethodCode] = $method['name'];
                     }
                 }
-                $allowedMethods[$carrierMethod->carrierCode] = $methodCodeArray;
-                $carrierConfig[$carrierMethod->carrierCode]['title'] = $carrierMethod->title;
-                if (isset($carrierMethod->sortOrder)) {
-                    $carrierConfig[$carrierMethod->carrierCode]['sortOrder'] = $carrierMethod->sortOrder;
+                $allowedMethods[$carrierMethod['carrierCode']] = $methodCodeArray;
+                $carrierConfig[$carrierMethod['carrierCode']]['title'] = $carrierMethod['title'];
+                if (isset($carrierMethod['sortOrder'])) {
+                    $carrierConfig[$carrierMethod['carrierCode']]['sortOrder'] = $carrierMethod['sortOrder'];
                 }
             }
         }

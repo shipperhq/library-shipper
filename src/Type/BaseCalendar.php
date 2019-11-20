@@ -141,21 +141,21 @@ class BaseCalendar
 
     public function processCalendarDetails($carrierRate, $carrierGroupDetail)
     {
-        $calendarDetails = (array)$carrierRate->calendarDetails;
+        $calendarDetails = $carrierRate['calendarDetails'];
         //need to convert this to cldrFormat
         $locale = isset($carrierGroupDetail['locale']) ? $carrierGroupDetail['locale'] : null;
-        $deliveryDateFormat = $carrierRate->deliveryDateFormat;
+        $deliveryDateFormat = $carrierRate['deliveryDateFormat'];
 
-        foreach ($carrierRate->rates as $rate) {
-            $defaultDate = $rate->deliveryDate/1000;
+        foreach ($carrierRate['rates'] as $rate) {
+            $defaultDate = $rate['deliveryDate']/1000;
             break;
         }
         if (!empty($calendarDetails)) {
             $calendarDetails = $this->getCalendarDetailsArray(
                 $calendarDetails,
                 $carrierGroupDetail,
-                $carrierRate->carrierId,
-                $carrierRate->carrierCode,
+                $carrierRate['carrierId'],
+                $carrierRate['carrierCode'],
                 $locale,
                 $deliveryDateFormat,
                 $defaultDate
@@ -301,11 +301,11 @@ class BaseCalendar
     }
 
     public function timeSlotBreakdownToSlotKey($timeSlotBreakdown) {
-        return "{$timeSlotBreakdown->timeStart}_{$timeSlotBreakdown->timeEnd}";
+        return "{$timeSlotBreakdown['timeStart']}_{$timeSlotBreakdown['timeEnd']}";
     }
 
     public function timeSlotBreakdownToSlotValue($timeSlotBreakdown) {
-        return "{$timeSlotBreakdown->timeStart} - {$timeSlotBreakdown->timeEnd}";
+        return "{$timeSlotBreakdown['timeStart']} - {$timeSlotBreakdown['timeEnd']}";
     }
 
     public function getDeliveryTimeSlots($calendarDetails, $date)

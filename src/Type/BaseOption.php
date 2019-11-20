@@ -154,18 +154,18 @@ class BaseOption extends BaseCalendar
      */
     public function processOptionDetails($carrierRate, $carrierGroupDetail)
     {
-        $options = (array)$carrierRate->availableOptions;
+        $options = $carrierRate['availableOptions'];
         $returnOptions = [];
         $this->checkForCustomerAccountOptions($carrierRate, $options);
 
         //SHQ16-2178 store the selected options on the rate
         $selections = [];
-        foreach ($carrierRate->rates as $rate) {
+        foreach ($carrierRate['rates'] as $rate) {
             $rateArray = (array)$rate;
             if (isset($rateArray['selectedOptions'])) {
                 foreach ($rateArray['selectedOptions'] as $option) {
                     foreach ($option as $oneOption) {
-                        $selections[$oneOption->name] = $oneOption->value;
+                        $selections[$oneOption['name']] = $oneOption['value'];
                     }
                 }
             }
@@ -189,8 +189,8 @@ class BaseOption extends BaseCalendar
                 $formatedOptions[$optionArray['code']] = $returnOption;
             }
 
-            $returnOptions['carrier_id'] = $carrierRate->carrierId;
-            $returnOptions['carrier_code'] = $carrierRate->carrierCode;
+            $returnOptions['carrier_id'] = $carrierRate['carrierId'];
+            $returnOptions['carrier_code'] = $carrierRate['carrierCode'];
             $returnOptions['selectedOption'] = [];
             $returnOptions['formatedOptions'] = $formatedOptions;
         }
@@ -201,7 +201,7 @@ class BaseOption extends BaseCalendar
     private function checkForCustomerAccountOptions($carrierRate, &$options)
     {
         //This should be server side and be included in the options sent
-        if ($carrierRate->carrierType == 'customerAccount') {
+        if ($carrierRate['carrierType'] == 'customerAccount') {
             $config = [
                 [
                 'name'  => 'Customer Carrier',

@@ -136,21 +136,21 @@ class BasePickup extends BaseCalendar
 
     public function processPickupDetails($carrierRate, $carrierGroupDetail)
     {
-        $locationDetails = (array)$carrierRate->pickupLocationDetails;
+        $locationDetails = (array)$carrierRate['pickupLocationDetails'];
         $locationsAvailable = [];
         if (!empty($locationDetails) && isset($locationDetails['pickupLocations'])) {
             foreach ($locationDetails['pickupLocations'] as $location) {
                 $locationAsArray =(array)$location;
-                $calendarDetails = (array)$location->calendarDetails;
+                $calendarDetails = (array)$location['calendarDetails'];
                 if (!empty($calendarDetails)) {
-                    $defaultDate = $location->pickupDate/1000;
+                    $defaultDate = $location['pickupDate']/1000;
                     $locale = isset($carrierGroupDetail['locale']) ? $carrierGroupDetail['locale'] : null;
-                    $deliveryDateFormat = $carrierRate->deliveryDateFormat;
+                    $deliveryDateFormat = $carrierRate['deliveryDateFormat'];
                     $calendarDetails = $this->getCalendarDetailsArray(
                         $calendarDetails,
                         $carrierGroupDetail,
-                        $carrierRate->carrierId,
-                        $carrierRate->carrierCode,
+                        $carrierRate['carrierId'],
+                        $carrierRate['carrierCode'],
                         $locale,
                         $deliveryDateFormat,
                         $defaultDate
@@ -159,14 +159,14 @@ class BasePickup extends BaseCalendar
                     $calendarDetails['showDate'] = false;
                 }
                 $locationAsArray['calendarDetails'] = $calendarDetails;
-                $locationAsArray['carrier_id'] = $carrierRate->carrierId;
-                $locationAsArray['carrier_code'] = $carrierRate->carrierCode;
+                $locationAsArray['carrier_id'] = $carrierRate['carrierId'];
+                $locationAsArray['carrier_code'] = $carrierRate['carrierCode'];
                 $locationAsArray['distanceUnit'] = $carrierGroupDetail['distanceUnit'];
                 $locationAsArray['showMap'] = $locationDetails['showMap'];
                 $locationAsArray['showOpeningHours']  = $locationDetails['showOpeningHours'];
                 $locationAsArray['showAddress']   = $locationDetails['showAddress'];
                 $locationAsArray['googleApiKey']   = $locationDetails['googleApiKey'];
-                $locationsAvailable[$location->pickupId] = $locationAsArray;
+                $locationsAvailable[$location['pickupId']] = $locationAsArray;
             }
         }
         return $locationsAvailable;
