@@ -582,4 +582,25 @@ class Helper
             'items'         => 'boxedItems'
         ];
     }
+
+	/**
+	 * Used to convert JSON response object to array
+	 *
+	 * @param $obj
+	 *
+	 * @return array
+	 */
+	public function object_to_array($obj)
+	{
+		if(is_object($obj)) $obj = (array) $obj;
+
+		if(is_array($obj)) {
+			$new = array();
+			foreach($obj as $key => $val) {
+				$new[$key] = $this->object_to_array($val);
+			}
+		}
+		else $new = $obj;
+		return $new;
+	}
 }

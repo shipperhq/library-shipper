@@ -34,3 +34,7 @@ SHQ18-2587/SHQ18-2613 Add price less fees to rates where available
 SHQ18-2869 Process rate response as array
 
 
+## 20.12.1 (2019-12-10)
+SHQ18-2990 Copy object to array function into library
+
+
