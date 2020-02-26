@@ -441,8 +441,17 @@ class Helper
         if (isset($carrierRate['rates'])) {
             foreach ($carrierRate['rates'] as $oneRate) {
                 if (isset($oneRate['shipments'])) {
+                    // MNB-48 Ensure we save the actual carrier code if using rate shopping
+                    if ($carrierRate['carrierCode'] == "multicarrier") {
+                        $carrierCode = $oneRate['carrierCode'];
+                    } else {
+                        $carrierCode = $carrierRate['carrierCode'] . '_' . $oneRate['code'];
+                    }
+
                     $standardData = ['carrier_group_id' => $cgId,
-                        'carrier_code' =>  $carrierRate['carrierCode'].'_'.$oneRate['code']];
+                                     'carrier_code'     => $carrierCode
+                    ];
+
                     foreach ($oneRate['shipments'] as $shipment) {
                         $data = array_merge($standardData, $this->map($mapping, (array)$shipment));
                         $shipments[] = $data;

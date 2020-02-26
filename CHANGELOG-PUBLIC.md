@@ -38,3 +38,7 @@ SHQ18-2869 Process rate response as array
 SHQ18-2990 Copy object to array function into library
 
 
+## 20.12.2 (2020-02-26)
+MNB-48 Support for storing rate shopped methods shipments as order comment
+
+
