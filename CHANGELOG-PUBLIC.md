@@ -42,3 +42,7 @@ SHQ18-2990 Copy object to array function into library
 MNB-48 Support for storing rate shopped methods shipments as order comment
 
 
+## 20.12.3 (2020-06-12)
+MNB-422 Revalidate saved addresses that have invalid validation status
+
+

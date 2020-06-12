@@ -63,15 +63,23 @@ class Helper
         $this->dateHelper = $dateHelper;
     }
 
+    /**
+     * MNB-422 Changed to revalidate if addressValidationStatus is anything but a match
+     *
+     * @param $addressValidationStatus
+     * @param $destinationType
+     *
+     * @return bool
+     */
     public function shouldValidateAddress($addressValidationStatus, $destinationType)
     {
         $validate = true;
-        if ($destinationType !== null && $destinationType != '') {
-            $validate = false;
-        } elseif ($addressValidationStatus !== null && $addressValidationStatus != ''
-            && $addressValidationStatus != 'EXACT_MATCH') {
+
+        if (strlen($destinationType) > 0 || $addressValidationStatus == 'EXACT_MATCH' ||
+            $addressValidationStatus == 'CORRECTED_EXACT_MATCH') {
             $validate = false;
         }
+
         return $validate;
     }
 
