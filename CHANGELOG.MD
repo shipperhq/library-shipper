@@ -46,3 +46,7 @@ MNB-48 Support for storing rate shopped methods shipments as order comment
 MNB-422 Revalidate saved addresses that have invalid validation status
 
 
+## 20.12.4 (2020-07-16)
+MNB-484 Ensure default date in calendar uses timezone
+
+

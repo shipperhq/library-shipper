@@ -182,7 +182,7 @@ class BaseCalendar
         //SHQ16-2041 pass default date in calendar details
         $calendarDetails['default_date'] = $this->getDateFromTimestamp(
             $defaultDate,
-            'Europe/London', //SHQ16-2078 12th Oct - see Jira for details
+            $calendarDetails['timezone'], // MNB-484, TB Reversed a change from SHQ16-2078
             $calendarDetails['dateFormat']
         );
         if ($calendarDetails['startDate'] != '') {
