@@ -50,3 +50,7 @@ MNB-422 Revalidate saved addresses that have invalid validation status
 MNB-484 Ensure default date in calendar uses timezone
 
 
+## 20.13.0 (2020-08-20)
+MNB-604 Add support for box comments for merged rates
+
+

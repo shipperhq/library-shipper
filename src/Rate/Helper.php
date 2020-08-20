@@ -249,23 +249,29 @@ class Helper
                 $config,
                 $emptySplitCarrierGroupArray
             );
-            foreach ($carrierRate['rates'] as $oneRate) {
-                if (isset($oneRate['rateBreakdownList'])) {
+            foreach ($carrierRate['rates'] as $mergedRate) {
+                if (isset($mergedRate['rateBreakdownList'])) {
                     $carrierGroupShippingDetail = [];
-                    $rateBreakdown = $oneRate['rateBreakdownList'];
+                    $shipments = [];
+                    $rateBreakdown = $mergedRate['rateBreakdownList'];
+
                     foreach ($rateBreakdown as $rateInMergedRate) {
                         if (isset($splitCarrierGroupDetail[$rateInMergedRate['carrierGroupId']])) {
                             if (isset($splitCarrierGroupDetail[$rateInMergedRate['carrierGroupId']][$rateInMergedRate['carrierCode']])
                                 && isset($splitCarrierGroupDetail[$rateInMergedRate['carrierGroupId']][$rateInMergedRate['carrierCode']][$rateInMergedRate['methodCode']])) {
-                                $carrierGroupShippingDetail[]= $splitCarrierGroupDetail[$rateInMergedRate['carrierGroupId']][$rateInMergedRate['carrierCode']][$rateInMergedRate['methodCode']];
+                                $cg = $splitCarrierGroupDetail[$rateInMergedRate['carrierGroupId']][$rateInMergedRate['carrierCode']][$rateInMergedRate['methodCode']];
+                                $carrierGroupShippingDetail[] = $cg;
+                                $shipments = array_merge($this->populateShipments($rateInMergedRate, $cg, true), $shipments);
                             }
                         }
                     }
+
                     foreach ($mergedRates as $key => $rateToAdd) {
-                        if ($rateToAdd['methodcode'] != $oneRate['code']) {
+                        if ($rateToAdd['methodcode'] != $mergedRate['code']) {
                             continue;
                         }
                         $rateToAdd['carriergroup_detail'] = $carrierGroupShippingDetail;
+                        $rateToAdd['shipments'] = $shipments;
                         $mergedRates[$key] = $rateToAdd;
                     }
                 }
@@ -431,16 +437,31 @@ class Helper
         }
     }
 
-    protected function populateShipments($carrierRate, $carrierGroupDetail)
+    /**
+     * Returns an array of shipments which includes carrier group info
+     *
+     * @param      $carrierRate
+     * @param      $carrierGroupDetail
+     * @param bool $addMethodCode Adds method code to carrier_code if set
+     *
+     * @return array
+     */
+    protected function populateShipments($carrierRate, $carrierGroupDetail, $addMethodCode = false)
     {
         $shipments = [];
         $cgId = array_key_exists('carrierGroupId', $carrierGroupDetail) ? $carrierGroupDetail['carrierGroupId'] : null;
+        $methodCode = array_key_exists('methodCode', $carrierRate) ? '_'.$carrierRate['methodCode'] : '';
         $mapping = $this->getPackagesMapping();
 
         //populate packages
         if (isset($carrierRate['shipments']) && $carrierRate['shipments'] != null) {
-            $standardData = ['carrier_group_id' => $cgId,
-                'carrier_code' =>  $carrierRate['carrierCode']];
+            $carrierCode = $addMethodCode ? $carrierRate['carrierCode'] . $methodCode : $carrierRate['carrierCode'];
+
+            $standardData = [
+                'carrier_group_id' => $cgId,
+                'carrier_code'     => $carrierCode
+            ];
+
             foreach ($carrierRate['shipments'] as $shipment) {
                 $data = array_merge($standardData, $this->map($mapping, (array)$shipment));
                 $shipments[] = $data;
