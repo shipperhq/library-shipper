@@ -54,3 +54,7 @@ MNB-484 Ensure default date in calendar uses timezone
 MNB-604 Add support for box comments for merged rates
 
 
+## 20.14.0 (2021-03-29)
+RIV-443 Add place order endpoint
+
+

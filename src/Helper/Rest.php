@@ -37,6 +37,7 @@ namespace ShipperHQ\Lib\Helper;
 class Rest
 {
     public $baseUrl = 'http://api.shipperhq.com/v1/';
+    public $basePostorderUrl = 'https://postapi.shipperhq.com/v1/';
 
     /**
      * @param false $hideNotifications
@@ -65,12 +66,28 @@ class Rest
     }
 
     /**
+     * @return string
+     */
+    public function getBasePostorderUrl()
+    {
+        return $this->basePostorderUrl;
+    }
+
+    /**
+     * @param string $baseUrl
+     */
+    public function setBasePostorderUrl($baseUrl)
+    {
+        $this->basePostorderUrl = $baseUrl;
+    }
+
+    /**
      * Retrieve url for getting allowed methods
      * @return string
      */
     public function getAllowedMethodGatewayUrl()
     {
-        return $this->getBaseUrl().'allowed_methods';
+        return $this->getBaseUrl() . 'allowed_methods';
     }
 
     /**
@@ -79,7 +96,7 @@ class Rest
      */
     public function getRateGatewayUrl()
     {
-        return  $this->getBaseUrl().'rates';
+        return  $this->getBaseUrl() . 'rates';
     }
 
     /*
@@ -87,7 +104,7 @@ class Rest
      */
     public function getAttributeGatewayUrl()
     {
-        return $this->getBaseUrl().'attributes/get';
+        return $this->getBaseUrl() . 'attributes/get';
     }
 
     /*
@@ -95,6 +112,14 @@ class Rest
      */
     public function getCheckSynchronizedUrl()
     {
-        return $this->getBaseUrl().'attributes/check';
+        return $this->getBaseUrl() . 'attributes/check';
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlaceOrderUrl()
+    {
+        return $this->getBasePostorderUrl() . 'placeorder';
     }
 }
