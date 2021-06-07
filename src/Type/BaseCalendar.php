@@ -103,6 +103,7 @@ class BaseCalendar
         $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);
         $this->adminOrderService->saveSelectedData($params);
         $this->adminOrderService->cleanDownRates($cartId, $carrierCode, $carrierGroupId);
+        $rates = [];
         try {
             $rates = $this->adminOrderService->reqeustShippingRates(
                 $cartId,

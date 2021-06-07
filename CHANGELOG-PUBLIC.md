@@ -58,3 +58,7 @@ MNB-604 Add support for box comments for merged rates
 RIV-443 Add place order endpoint
 
 
+## 20.14.1 (2021-06-07)
+MNB-1251 Fix around handling no rates
+
+
