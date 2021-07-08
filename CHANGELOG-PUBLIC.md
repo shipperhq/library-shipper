@@ -62,3 +62,7 @@ RIV-443 Add place order endpoint
 MNB-1251 Fix around handling no rates
 
 
+## 20.14.2 (2021-07-08)
+MNB-1227 Fix around promotional rules
+
+

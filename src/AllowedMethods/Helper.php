@@ -57,7 +57,7 @@ class Helper
                 $methodCodeArray = [];
                 foreach ($methodList as $method) {
                     $allowedMethodCode = $method['methodCode'];
-                    $allowedMethodCode = preg_replace('/&|;| /', "_", $allowedMethodCode);
+                    $allowedMethodCode = preg_replace('/&|;| /', "", $allowedMethodCode);
                     if (!array_key_exists($allowedMethodCode, $allowedMethods)) {
                         $methodCodeArray[$allowedMethodCode] = $method['name'];
                     }
