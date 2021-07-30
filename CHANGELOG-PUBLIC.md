@@ -66,3 +66,7 @@ MNB-1251 Fix around handling no rates
 MNB-1227 Fix around promotional rules
 
 
+## 20.14.3 (2021-07-30)
+ MNB-1492 Ensure city is set in request on date or option change 
+
+

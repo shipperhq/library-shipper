@@ -71,9 +71,14 @@ class BaseCalendar
         $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);
         $this->checkoutService->saveSelectedData($params);
         $this->checkoutService->cleanDownRates($cartId, $carrierCode, $carrierGroupId, $addressId);
-        $addressArray = ['street' => $addressData->getStreet(), 'region' => $addressData->getRegion(),
-                'region_id' => $addressData->getRegionId(), 'postcode' => $addressData->getPostcode(),
-                'country_id' => $addressData->getCountryId()];
+        $addressArray = [
+            'street'     => $addressData->getStreet(),
+            'city'       => $addressData->getCity(),
+            'region'     => $addressData->getRegion(),
+            'region_id'  => $addressData->getRegionId(),
+            'postcode'   => $addressData->getPostcode(),
+            'country_id' => $addressData->getCountryId()
+        ];
         try {
             $rates = $this->checkoutService->reqeustShippingRates(
                 $cartId,

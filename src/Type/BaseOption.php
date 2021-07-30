@@ -95,9 +95,15 @@ class BaseOption extends BaseCalendar
         );
         $this->checkoutService->saveSelectedData($params);
         $this->checkoutService->cleanDownRates($cartId, $carrierCode, $carrierGroupId, $addressId);
-        $addressArray = ['street' => $addressData->getStreet(), 'region' => $addressData->getRegion(),
-            'region_id' => $addressData->getRegionId(), 'postcode' => $addressData->getPostcode(),
-            'city' => $addressData->getCity(), 'country_id' => $addressData->getCountryId()];
+        $addressArray = [
+            'street'     => $addressData->getStreet(),
+            'city'       => $addressData->getCity(),
+            'region'     => $addressData->getRegion(),
+            'region_id'  => $addressData->getRegionId(),
+            'postcode'   => $addressData->getPostcode(),
+            'country_id' => $addressData->getCountryId()
+        ];
+
         $rates = $this->checkoutService->reqeustShippingRates($cartId, $carrierCode, $carrierGroupId, $addressArray, $addressId);
         //need to do smart cleaning at this point
         $this->checkoutService->cleanDownSelectedData();
@@ -137,7 +143,7 @@ class BaseOption extends BaseCalendar
 
         return $selections;
     }
-    
+
     public function saveOptionSelectOnCheckoutProceed($checkoutSelection, $carrierId, $carrierCode, $carrierGroupId)
     {
         $params = $this->getOptionSelectSaveParameters($checkoutSelection, $carrierId, $carrierCode, $carrierGroupId);
