@@ -70,3 +70,7 @@ MNB-1227 Fix around promotional rules
  MNB-1492 Ensure city is set in request on date or option change 
 
 
+## 20.15.0 (2021-11-19)
+RIV-687 Add freight quote ID to carrier group
+
+

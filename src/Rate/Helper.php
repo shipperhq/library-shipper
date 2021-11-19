@@ -391,6 +391,9 @@ class Helper
         $carrierGroupDetail['customsMessage'] = $rate['customsMessage'];
         $carrierGroupDetail['hideNotifications'] = $hideNotifications;
         $carrierGroupDetail['code'] = $rate['code'];
+        if (isset($rate['quoteId'])) {
+            $carrierGroupDetail['freightQuoteId'] = $rate['quoteId'];
+        }
         if (isset($rate['selectedOptions'])) {
             $selectedOptions =  (array)$rate['selectedOptions'];
             if (isset($selectedOptions['options'])) {
