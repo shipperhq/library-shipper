@@ -74,3 +74,7 @@ MNB-1227 Fix around promotional rules
 RIV-687 Add freight quote ID to carrier group
 
 
+## 20.16.0 (2022-05-13)
+MND-2430 M2.4.4 compatibility
+
+

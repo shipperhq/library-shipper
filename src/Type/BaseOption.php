@@ -131,7 +131,7 @@ class BaseOption extends BaseCalendar
         foreach (self::$shippingOptions as $option) {
             //destination type is case sensitive in SHQ
             if (isset($optionValues[$option]) && $optionValues[$option] != '') {
-                $shippingOptions[] = ['name'=> $option, 'value' => strtolower($optionValues[$option])];
+                $shippingOptions[] = ['name'=> $option, 'value' => strtolower((string) $optionValues[$option])];
             }
         }
         $selections = [

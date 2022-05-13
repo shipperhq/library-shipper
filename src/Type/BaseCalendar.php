@@ -153,7 +153,7 @@ class BaseCalendar
         $deliveryDateFormat = $carrierRate['deliveryDateFormat'];
 
         foreach ($carrierRate['rates'] as $rate) {
-            $defaultDate = $rate['deliveryDate']/1000;
+            $defaultDate = intval($rate['deliveryDate']/1000);
             break;
         }
         if (!empty($calendarDetails)) {
@@ -192,7 +192,7 @@ class BaseCalendar
             $calendarDetails['dateFormat']
         );
         if ($calendarDetails['startDate'] != '') {
-            $calendarDetails['start'] = $calendarDetails['startDate']/1000;
+            $calendarDetails['start'] = intval($calendarDetails['startDate']/1000);
         } else {
             $calendarDetails['start'] = $defaultDate;
         }
@@ -260,7 +260,7 @@ class BaseCalendar
         $timezone = $calendarDetails['timezone'];
         $startDate = $calendarDetails['start'];
         $endDate = isset($calendarDetails['calendarEndDate']) ?
-            $calendarDetails['calendarEndDate']/1000
+            intval($calendarDetails['calendarEndDate']/1000)
             : false;
 
         $arrBlackoutDates = [];
@@ -451,7 +451,7 @@ class BaseCalendar
      */
     public function getDayOfWeekFromDate($date, $timezone)
     {
-        $unixTime = strtotime($date);
+        $unixTime = strtotime((string) $date);
         $dayOfWeek = $this->getDateFromTimestamp($unixTime, $timezone, 'N');
         return $dayOfWeek;
     }

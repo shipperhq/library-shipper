@@ -67,12 +67,13 @@ class Helper
      * MNB-422 Changed to revalidate if addressValidationStatus is anything but a match
      *
      * @param $addressValidationStatus
-     * @param $destinationType
+     * @param string $destinationType
      *
      * @return bool
      */
-    public function shouldValidateAddress($addressValidationStatus, $destinationType)
+    public function shouldValidateAddress(?string $addressValidationStatus, ?string $destinationType): bool
     {
+        $destinationType = $destinationType ?? "";
         $validate = true;
 
         if (strlen($destinationType) > 0 || $addressValidationStatus == 'EXACT_MATCH' ||
@@ -422,14 +423,14 @@ class Helper
             $date = new \DateTime();
 
             $date->setTimezone(new \DateTimeZone($timezone));
-            $date->setTimestamp($rate['deliveryDate']/1000);
+            $date->setTimestamp(intval($rate['deliveryDate']/1000));
             $deliveryDate = $date->format($dateFormat);
             $carrierGroupDetail['delivery_date'] = $deliveryDate;
         }
         if (isset($rate['dispatchDate']) && is_numeric($rate['dispatchDate'])) {
             $dispatch = new \DateTime();
             $dispatch->setTimezone(new \DateTimeZone($timezone));
-            $dispatch->setTimestamp($rate['dispatchDate']/1000);
+            $dispatch->setTimestamp(intval($rate['dispatchDate']/1000));
             $dispatchDate = $dispatch->format($dateFormat);
             $carrierGroupDetail['dispatch_date'] = $dispatchDate;
         }
