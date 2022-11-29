@@ -59,7 +59,6 @@ class Helper
     public function __construct(
         \ShipperHQ\Lib\Helper\Date $dateHelper
     ) {
-
         $this->dateHelper = $dateHelper;
     }
 
@@ -181,36 +180,35 @@ class Helper
                 $splitCarrierGroupDetail
             );
 
-			//SHQ18-1613 If rate shopped method, look for actual method code and name
-			foreach ($carrierRate['rates'] as $oneRate) {
-				if (isset($oneRate['rateBreakdownList']) && count($oneRate['rateBreakdownList']) > 0) {
-					$rateBreakdown = $oneRate['rateBreakdownList'];
-					$actualCarrierCode = $oneRate['carrierCode'];
-					$actualShippingRate = $oneRate['totalCharges'];
-					$carrierGroupShippingDetail = [];
+            //SHQ18-1613 If rate shopped method, look for actual method code and name
+            foreach ($carrierRate['rates'] as $oneRate) {
+                if (isset($oneRate['rateBreakdownList']) && count($oneRate['rateBreakdownList']) > 0) {
+                    $rateBreakdown = $oneRate['rateBreakdownList'];
+                    $actualCarrierCode = $oneRate['carrierCode'];
+                    $actualShippingRate = $oneRate['totalCharges'];
+                    $carrierGroupShippingDetail = [];
 
-					foreach ($rateBreakdown as $candidateActualRate) {
-						if ($candidateActualRate['carrierCode'] == $actualCarrierCode
-							&& $actualShippingRate == $candidateActualRate['totalCharges']) {
-							$carrierGroupShippingDetail['carrier_code'] = $candidateActualRate['carrierCode'];
-							$carrierGroupShippingDetail['methodTitle'] = $candidateActualRate['name'];
-							$carrierGroupShippingDetail['carrierType'] = $candidateActualRate['carrierType'];
-							$carrierGroupShippingDetail['code'] = $candidateActualRate['methodCode'];
-							$carrierGroupShippingDetail['carrierTitle'] = $oneRate['carrierTitle'];
-							$carrierGroupShippingDetail['carrierName'] = $oneRate['carrierTitle'];
-						}
-					}
+                    foreach ($rateBreakdown as $candidateActualRate) {
+                        if ($candidateActualRate['carrierCode'] == $actualCarrierCode
+                            && $actualShippingRate == $candidateActualRate['totalCharges']) {
+                            $carrierGroupShippingDetail['carrier_code'] = $candidateActualRate['carrierCode'];
+                            $carrierGroupShippingDetail['methodTitle'] = $candidateActualRate['name'];
+                            $carrierGroupShippingDetail['carrierType'] = $candidateActualRate['carrierType'];
+                            $carrierGroupShippingDetail['code'] = $candidateActualRate['methodCode'];
+                            $carrierGroupShippingDetail['carrierTitle'] = $oneRate['carrierTitle'];
+                            $carrierGroupShippingDetail['carrierName'] = $oneRate['carrierTitle'];
+                        }
+                    }
 
-					foreach ($thisCarriersRates as $key => $rateToAdd) {
-						if ($rateToAdd['methodcode'] != $oneRate['code']) {
-							continue;
-						}
-						$rateToAdd['carriergroup_detail'] = array_merge($rateToAdd['carriergroup_detail'],$carrierGroupShippingDetail);
-						$thisCarriersRates[$key] = $rateToAdd;
-					}
-
-				}
-			}
+                    foreach ($thisCarriersRates as $key => $rateToAdd) {
+                        if ($rateToAdd['methodcode'] != $oneRate['code']) {
+                            continue;
+                        }
+                        $rateToAdd['carriergroup_detail'] = array_merge($rateToAdd['carriergroup_detail'], $carrierGroupShippingDetail);
+                        $thisCarriersRates[$key] = $rateToAdd;
+                    }
+                }
+            }
 
             $carrierResultWithRates['rates'] = $thisCarriersRates;
             $thisCarriersShipments = $this->populateShipments($carrierRate, $carrierGroupDetail);
@@ -301,7 +299,6 @@ class Helper
         $dateOption = $carrierRate['dateOption'];
 
         foreach ($carrierRate['rates'] as $oneRate) {
-
             $methodDescription = false;
             $title = $config->getTransactionIdEnabled() ?
                 $oneRate['name'] . ' (' . $carrierGroupDetail['transaction'] . ')'
@@ -323,7 +320,7 @@ class Helper
             }
             $carrierType = $oneRate['carrierType'];
             if ($carrierRate['carrierType'] == 'shqshared') {
-                $carrierType = $carrierRate['carrierType'] .'_' .$oneRate['carrierType'];
+                $carrierType = $carrierRate['carrierType'] . '_' . $oneRate['carrierType'];
                 $carrierGroupDetail['carrierType'] = $carrierType;
                 if (isset($oneRate['carrierTitle'])) {
                     $carrierGroupDetail['carrierTitle'] = $oneRate['carrierTitle'];
@@ -372,7 +369,7 @@ class Helper
         if (!$hideNotifyConfigFlag && isset($carrierRate['notices'])) {
             $notice = '';
             foreach ($carrierRate['notices'] as $oneNotice) {
-                $notice .= $oneNotice ;
+                $notice .= $oneNotice;
             }
         }
         $carrierGroupDetail['notice'] = $notice;
@@ -437,7 +434,7 @@ class Helper
 
         if (isset($rate['deliveryMessage']) && $rate['deliveryMessage'] !== null && $rate['deliveryMessage'] != '') {
             $methodDescription = $dateOption == self::TIME_IN_TRANSIT ?
-                '(' .$rate['deliveryMessage'] .')' : $rate['deliveryMessage'];
+                '(' . $rate['deliveryMessage'] . ')' : $rate['deliveryMessage'];
         }
     }
 
@@ -454,7 +451,7 @@ class Helper
     {
         $shipments = [];
         $cgId = array_key_exists('carrierGroupId', $carrierGroupDetail) ? $carrierGroupDetail['carrierGroupId'] : null;
-        $methodCode = array_key_exists('methodCode', $carrierRate) ? '_'.$carrierRate['methodCode'] : '';
+        $methodCode = array_key_exists('methodCode', $carrierRate) ? '_' . $carrierRate['methodCode'] : '';
         $mapping = $this->getPackagesMapping();
 
         //populate packages
@@ -497,10 +494,9 @@ class Helper
 
     public function extractDateFormat($carrierRate, $locale)
     {
-        $interim = isset($carrierRate['deliveryDateFormat']) ?
-            $carrierRate['deliveryDateFormat'] : self::DEFAULT_DATE_FORMAT;
-        $dateFormat = $this->dateHelper->getCldrDateFormat($locale, $interim);
-        return $dateFormat;
+        $interim = $carrierRate['deliveryDateFormat'] ?? self::DEFAULT_DATE_FORMAT;
+
+        return $this->dateHelper->getCldrDateFormat($locale, $interim);
     }
 
     /**
@@ -509,6 +505,7 @@ class Helper
      * @param string $type
      * @param string $code
      * @return array|bool
+     * @deprecated instead use the function in the Date helper
      */
     public function getCode($type, $code = '')
     {
@@ -625,24 +622,27 @@ class Helper
         ];
     }
 
-	/**
-	 * Used to convert JSON response object to array
-	 *
-	 * @param $obj
-	 *
-	 * @return array
-	 */
-	public function object_to_array($obj)
-	{
-		if(is_object($obj)) $obj = (array) $obj;
+    /**
+     * Used to convert JSON response object to array
+     *
+     * @param $obj
+     *
+     * @return array
+     */
+    public function object_to_array($obj)
+    {
+        if (is_object($obj)) {
+            $obj = (array) $obj;
+        }
 
-		if(is_array($obj)) {
-			$new = array();
-			foreach($obj as $key => $val) {
-				$new[$key] = $this->object_to_array($val);
-			}
-		}
-		else $new = $obj;
-		return $new;
-	}
+        if (is_array($obj)) {
+            $new = [];
+            foreach ($obj as $key => $val) {
+                $new[$key] = $this->object_to_array($val);
+            }
+        } else {
+            $new = $obj;
+        }
+        return $new;
+    }
 }

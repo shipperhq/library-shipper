@@ -75,6 +75,10 @@ RIV-687 Add freight quote ID to carrier group
 
 
 ## 20.16.0 (2022-05-13)
-MND-2430 M2.4.4 compatibility
+MNB-2430 M2.4.4 compatibility
+
+
+## 20.17.0 (2022-11-29)
+MNB-3219 Fix issue with M2 sales order grid showing incorrect year on dates
 
 
