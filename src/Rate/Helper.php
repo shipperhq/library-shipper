@@ -19,7 +19,7 @@
  * versions in the future. If you wish to customize Magento for your
  * needs please refer to http://www.magentocommerce.com for more information.
  *
- * Shipper HQ Shipping
+ * ShipperHQ Shipping
  *
  * @category ShipperHQ
  * @package ShipperHQ_Lib
@@ -180,7 +180,7 @@ class Helper
                 $splitCarrierGroupDetail
             );
 
-            //SHQ18-1613 If rate shopped method, look for actual method code and name
+            // SHQ18-1613 If rate shopped method, look for actual method code and name
             foreach ($carrierRate['rates'] as $oneRate) {
                 if (isset($oneRate['rateBreakdownList']) && count($oneRate['rateBreakdownList']) > 0) {
                     $rateBreakdown = $oneRate['rateBreakdownList'];
@@ -288,11 +288,7 @@ class Helper
     ) {
         $thisCarriersRates = [];
         $baseRate = 1;
-        $shipments = $this->populateCarrierLevelDetails(
-            $carrierRate,
-            $carrierGroupDetail,
-            $config->getHideNotifications()
-        );
+        $this->populateCarrierLevelDetails($carrierRate, $carrierGroupDetail, $config->getHideNotifications());
 
         $dateFormat = $this->extractDateFormat($carrierRate, $config->getLocale());
 
@@ -320,13 +316,19 @@ class Helper
             }
             $carrierType = $oneRate['carrierType'];
             if ($carrierRate['carrierType'] == 'shqshared') {
-                $carrierType = $carrierRate['carrierType'] . '_' . $oneRate['carrierType'];
+                $carrierType = $carrierRate['carrierType'];
+
+                // MNB-2930 The carrier type can be null when merged rates are being used
+                if ($oneRate['carrierType']) {
+                    $carrierType = $carrierRate['carrierType'] . '_' . $oneRate['carrierType'];
+                }
+
                 $carrierGroupDetail['carrierType'] = $carrierType;
                 if (isset($oneRate['carrierTitle'])) {
                     $carrierGroupDetail['carrierTitle'] = $oneRate['carrierTitle'];
                 }
             }
-            //create rateToAdd array - freight_rate, custom_duties,
+            // create rateToAdd array - freight_rate, custom_duties,
             $rateToAdd = [
                 'methodcode' => $oneRate['code'],
                 'method_title' => $title,
@@ -350,8 +352,7 @@ class Helper
             }
             $rateToAdd['carriergroup_detail'] = $carrierGroupDetail;
             if (is_array($splitCarrierGroupDetail)) {
-                $splitCarrierGroupDetail[$carrierGroupDetail['carrierGroupId']][$carrierRate['carrierCode']][$oneRate['code']] =
-                    $carrierGroupDetail;
+                $splitCarrierGroupDetail[$carrierGroupDetail['carrierGroupId']][$oneRate['carrierCode']][$oneRate['code']] = $carrierGroupDetail;
             }
             $thisCarriersRates[] = $rateToAdd;
         }

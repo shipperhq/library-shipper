@@ -82,3 +82,7 @@ MNB-2430 M2.4.4 compatibility
 MNB-3219 Fix issue with M2 sales order grid showing incorrect year on dates
 
 
+## 20.17.1 (2022-12-12)
+MNB-2930 Fix order notes with generic carrier
+
+
