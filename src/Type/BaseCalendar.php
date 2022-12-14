@@ -19,7 +19,7 @@
  * versions in the future. If you wish to customize Magento for your
  * needs please refer to http://www.magentocommerce.com for more information.
  *
- * Shipper HQ Shipping
+ * ShipperHQ Shipping
  *
  * @category ShipperHQ
  * @package ShipperHQ_Lib
@@ -29,15 +29,16 @@
  */
 namespace ShipperHQ\Lib\Type;
 
+use ShipperHQ\Lib\Checkout\AbstractService;
+use ShipperHQ\Lib\Helper\Date;
 /**
  * Class BaseCalendar
- *
  * @package ShipperHQ_Lib
  */
 class BaseCalendar
 {
     /**
-     * @var \ShipperHQ\Lib\Checkout\AbstractService
+     * @var AbstractService
      */
     protected $checkoutService;
     /**
@@ -49,7 +50,7 @@ class BaseCalendar
      * @codeCoverageIgnore
      */
     public function __construct(
-        \ShipperHQ\Lib\Checkout\AbstractService $checkoutService,
+        AbstractService $checkoutService,
         \ShipperHQ\Lib\AdminOrder\AbstractService $adminOrderService
     ) {
         $this->checkoutService = $checkoutService;
@@ -88,9 +89,9 @@ class BaseCalendar
                 $addressId
             );
         } catch (\Exception $e) {
-            //handle so we can clean down rates if necessary
+            // handle so we can clean down rates if necessary
         }
-        //need to do smart cleaning at this point
+        // need to do smart cleaning at this point
         $this->checkoutService->cleanDownSelectedData();
         return $rates;
     }
@@ -116,9 +117,9 @@ class BaseCalendar
                 $carrierGroupId
             );
         } catch (\Exception $e) {
-            //handle so we can clean down rates if necessary
+            // handle so we can clean down rates if necessary
         }
-        //need to do smart cleaning at this point
+        // need to do smart cleaning at this point
         $this->adminOrderService->cleanDownSelectedData();
         return $rates;
     }
@@ -148,8 +149,8 @@ class BaseCalendar
     public function processCalendarDetails($carrierRate, $carrierGroupDetail)
     {
         $calendarDetails = $carrierRate['calendarDetails'];
-        //need to convert this to cldrFormat
-        $locale = isset($carrierGroupDetail['locale']) ? $carrierGroupDetail['locale'] : null;
+        // need to convert this to cldrFormat
+        $locale = $carrierGroupDetail['locale'] ?? null;
         $deliveryDateFormat = $carrierRate['deliveryDateFormat'];
 
         foreach ($carrierRate['rates'] as $rate) {
@@ -180,12 +181,12 @@ class BaseCalendar
         $deliveryDateFormat,
         $defaultDate
     ) {
-        $calendarDetails['dateFormat'] = \ShipperHQ\Lib\Helper\Date::getDateFormat($locale);
-        $calendarDetails['datepickerFormat'] = \ShipperHQ\Lib\Helper\Date::getDatepickerFormat($locale);
-        $calendarDetails['displayDateFormat'] = \ShipperHQ\Lib\Helper\Date::getCldrDateFormat($locale, $deliveryDateFormat);
+        $calendarDetails['dateFormat'] = Date::getDateFormat($locale);
+        $calendarDetails['datepickerFormat'] = Date::getDatepickerFormat($locale);
+        $calendarDetails['displayDateFormat'] = Date::getCldrDateFormat($locale, $deliveryDateFormat);
         $calendarDetails['timezone'] = $carrierGroupDetail['timezone'];
         $calendarDetails['default_date_timestamp'] = $defaultDate;
-        //SHQ16-2041 pass default date in calendar details
+        // SHQ16-2041 pass default date in calendar details
         $calendarDetails['default_date'] = $this->getDateFromTimestamp(
             $defaultDate,
             $calendarDetails['timezone'], // MNB-484, TB Reversed a change from SHQ16-2078
@@ -216,7 +217,7 @@ class BaseCalendar
             }
 
             if (count($dateOptions) <= 0) {
-                //handle if no date options found
+                // handle if no date options found
                 $dateOptions = [];
             }
 
@@ -227,34 +228,41 @@ class BaseCalendar
                 $calendarDetails['display_time_slots'] = false;
                 $calendarDetails['showTimeslots'] = false;
             }
+        } else {
+            // MNB-3119 Something has gone wrong
+            $calendarDetails['display_time_slots']= false;
+            $calendarDetails['showTimeslots'] = false;
+            $calendarDetails['min_date'] = $calendarDetails['default_date'];
+            $calendarDetails['max_date'] = $calendarDetails['default_date'];
         }
         $calendarDetails['allowed_dates'] = $dateOptions;
-        if (!empty($dateOptions)) { //SHQ16-2041
+        if (!empty($dateOptions)) { // SHQ16-2041
             $keys = array_keys($dateOptions);
             $calendarDetails['min_date'] = $keys[0];
             $calendarDetails['max_date'] = end($keys);
-            //SHQ16-2392 check the selected date is in the date options - if not then remove it and push the default date to the first available
-            //this is an issue for example if you change carriers selected on checkout, the previous carriers selected date
-            //may not be viable for this carrier
+            /*
+             * SHQ16-2392 check the selected date is in the date options - if not then remove it and push the default
+             * date to the first available. This is an issue for example if you change carriers selected on checkout,
+             * the previous carriers selected date may not be viable for this carrier
+             */
             $isInDateOptions = in_array($calendarDetails['default_date'], $keys);
             if (!$isInDateOptions) {
                 $calendarDetails['default_date'] = $calendarDetails['min_date'];
             }
         }
+
         return $calendarDetails;
     }
 
     /**
-     * Returns back an array of dates for Store Pickup
      * These dates are not influenced by the location
-     * @return array
+     * @return array an array of dates for Store Pickup
      */
     public function getDateOptions($calendarDetails)
     {
         $numPickupDays = array_key_exists('maxDays', $calendarDetails) ? $calendarDetails['maxDays'] : 10;
 
         //Convert java linux timestamps (milliseconds) into php linux timestamps (seconds)
-
         $dateOptions = [];
         $dateFormat = $calendarDetails['dateFormat'];
         $timezone = $calendarDetails['timezone'];
@@ -266,16 +274,16 @@ class BaseCalendar
         $arrBlackoutDates = [];
         foreach ($calendarDetails['blackoutDates'] as $blackoutDate) {
             $arrBlackoutDates[] = $this->getDateFromDate($blackoutDate, $timezone, $dateFormat);
-        };
+        }
         $arrBlackoutDays = $calendarDetails['blackoutDays'];
 
         if (count($arrBlackoutDays) == 7) {
-            //somehow flag that there are no date options available
+            // somehow flag that there are no date options available
             return $dateOptions;
         }
         $countDays = 0;
         while ($countDays < $numPickupDays) {
-            //support end date inclusive
+            // support end date inclusive
             if ($endDate && $startDate > $endDate) {
                 break;
             }
@@ -296,7 +304,8 @@ class BaseCalendar
         return $dateOptions;
     }
 
-    public function timeSlotBreakdownListToSlotList($timeSlotBreakdownList) {
+    public function timeSlotBreakdownListToSlotList($timeSlotBreakdownList)
+    {
         $timeSlots = [];
         foreach ($timeSlotBreakdownList as $timeSlotBreakdown) {
             $key = $this->timeSlotBreakdownToSlotKey($timeSlotBreakdown);
@@ -306,11 +315,13 @@ class BaseCalendar
         return $timeSlots;
     }
 
-    public function timeSlotBreakdownToSlotKey($timeSlotBreakdown) {
+    public function timeSlotBreakdownToSlotKey($timeSlotBreakdown)
+    {
         return "{$timeSlotBreakdown['timeStart']}_{$timeSlotBreakdown['timeEnd']}";
     }
 
-    public function timeSlotBreakdownToSlotValue($timeSlotBreakdown) {
+    public function timeSlotBreakdownToSlotValue($timeSlotBreakdown)
+    {
         return "{$timeSlotBreakdown['timeStart']} - {$timeSlotBreakdown['timeEnd']}";
     }
 
@@ -329,25 +340,25 @@ class BaseCalendar
 
         if ($today == $date) {
             $isToday = true;
-            //account for same day delivery with lead time in hours
+            // account for same day delivery with lead time in hours
             $exactStartTimeStamp = $calendarDetails['start'];
-            //if we are calcuating time slots for the selected date and that date is today.
-            //need to now check that the current time is not AFTER the earliest possible start time (including any lead time in hours)
+            // if we are calcuating time slots for the selected date and that date is today.
+            // need to now check that the current time is not AFTER the earliest possible start time (including any lead time in hours)
             if ($selectedDate == $today && $calendarDetails['default_date_timestamp'] > $exactStartTimeStamp) {
                 $exactStartTimeStamp = $calendarDetails['default_date_timestamp'];
             }
         }
 
         $currentTime = 0;
-        //if we are generating slots for today, make sure we don't offer any in the past
-        //and we account for lead time in hours
+        // if we are generating slots for today, make sure we don't offer any in the past,
+        // and we account for lead time in hours
         if ($isToday) {
             $currentTimeClass = new \DateTime("now", $timezoneObj);
             $currentTime = $currentTimeClass->getTimestamp();
             $currentTime = max($currentTime, $exactStartTimeStamp);
         }
-        //if we are generating slots for the date that matches the default date, there may be lead time in hours,
-        //lets account for that by setting the currentTime to be the default_date_timestamp
+        // if we are generating slots for the date that matches the default date, there may be lead time in hours,
+        // lets account for that by setting the currentTime to be the default_date_timestamp
         if (!$isToday && $selectedDate == $date) {
             $currentTime = $calendarDetails['default_date_timestamp'];
         }
@@ -363,22 +374,22 @@ class BaseCalendar
 
         array_multisort($sortTime, SORT_ASC, $timeSlotDetail);
 
-        //for implementation of date/day based slot detail in future
+        // for implementation of date/day based slot detail in future
         $timeSlots = [];
         foreach ($timeSlotDetail as $slotDetail) {
-            // If we dont have all our datapoints then drop the slot
+            // If we don't have all our datapoints then drop the slot
             if (!isset($slotDetail['timeStart'], $slotDetail['timeEnd'], $slotDetail['interval'])) {
                 continue;
             }
 
             // Setup slot boundaries and interval
-            $slotStartTime = new \DateTime($date . ' ' .$slotDetail['timeStart'], $timezoneObj);
-            $slotEndTime = new \DateTime($date . ' ' .$slotDetail['timeEnd'], $timezoneObj);
+            $slotStartTime = new \DateTime($date . ' ' . $slotDetail['timeStart'], $timezoneObj);
+            $slotEndTime = new \DateTime($date . ' ' . $slotDetail['timeEnd'], $timezoneObj);
             $interval = $slotDetail['interval'];
 
-            //if interval is half or full day then calculate those intervals
+            // if interval is half or full day then calculate those intervals
             if ($interval <= 2) {
-                $dayLengthInMins = ($slotEndTime->getTimestamp() - $slotStartTime->getTimestamp() ) / 60;
+                $dayLengthInMins = ($slotEndTime->getTimestamp() - $slotStartTime->getTimestamp()) / 60;
                 $interval = $dayLengthInMins / $interval;
             }
 
@@ -409,7 +420,7 @@ class BaseCalendar
 
                 $timeSlots[$key] = $value;
             }
-            unset ($e, $s); // Paranoia
+            unset($e, $s); // Paranoia
         }
 
         if (count($timeSlots) == 0) {
@@ -421,7 +432,7 @@ class BaseCalendar
 
     public function getDateFromDate($date, $timezone, $dateFormat)
     {
-        //SHQ16-2417 correct black out dates to ignore time zone. This is just to reformat the dates correctly
+        // SHQ16-2417 correct black out dates to ignore time zone. This is just to reformat the dates correctly
         $returnDate = $this->getDateFromTimestamp(strtotime($date), 'Europe/London', $dateFormat);
         return $returnDate;
     }
@@ -470,12 +481,15 @@ class BaseCalendar
 
     /**
      * Given a date will add a day to it.
-     * @param $day
+     *
+     * @param     $day
      * @param int $numDaysToAdd
+     *
+     * @return false|int
      */
     protected function _addDay(&$day, $numDaysToAdd = 1)
     {
-        $day = strtotime('+' .$numDaysToAdd .' day', $day);
+        $day = strtotime('+' . $numDaysToAdd . ' day', $day);
         return $day;
     }
 
@@ -483,7 +497,7 @@ class BaseCalendar
     {
         $arrBlackoutDays = [];
         foreach ($blackoutArray as $dayOfWeek) {
-        //Java Sunday = 7, Monday = 1. PHP Monday = 1, Saturday = 6, Sunday = 0
+            //Java Sunday = 7, Monday = 1. PHP Monday = 1, Saturday = 6, Sunday = 0
             if ($dayOfWeek == 7) {
                 $dayOfWeek = 0;
             }

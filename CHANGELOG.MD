@@ -86,3 +86,7 @@ MNB-3219 Fix issue with M2 sales order grid showing incorrect year on dates
 MNB-2930 Fix order notes with generic carrier
 
 
+## 20.17.2 (2022-12-14)
+MNB-3119 fix broken checkout with one day calendar
+
+
