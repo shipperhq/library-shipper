@@ -90,3 +90,7 @@ MNB-2930 Fix order notes with generic carrier
 MNB-3119 fix broken checkout with one day calendar
 
 
+## 20.17.3 (2023-04-04)
+SHQ23-352 Add carrier type to returned option config
+
+

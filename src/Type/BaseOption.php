@@ -197,6 +197,7 @@ class BaseOption extends BaseCalendar
 
             $returnOptions['carrier_id'] = $carrierRate['carrierId'];
             $returnOptions['carrier_code'] = $carrierRate['carrierCode'];
+            $returnOptions['carrier_type'] = $carrierRate['carrierType'];
             $returnOptions['selectedOption'] = [];
             $returnOptions['formatedOptions'] = $formatedOptions;
         }
