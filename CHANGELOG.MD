@@ -94,3 +94,43 @@ MNB-3119 fix broken checkout with one day calendar
 SHQ23-352 Add carrier type to returned option config
 
 
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Readme updates
+
+
+## 20.17.4 (2025-01-08)
+SHQ23-4085 Update readme
+
+
