@@ -36,7 +36,7 @@ namespace ShipperHQ\Lib\Helper;
  */
 class Rest
 {
-    public $baseUrl = 'http://api.shipperhq.com/v1/';
+    public $baseUrl = 'https://api.shipperhq.com/v1/';
     public $basePostorderUrl = 'https://postapi.shipperhq.com/v1/';
 
     /**
