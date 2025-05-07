@@ -138,3 +138,7 @@ SHQ23-4085 Update readme
 SHQ23-4531 Remove Magento specific naming from composer.json
 
 
+## 20.19.1 (2025-05-07)
+SHQ23-4531 Remove autoload registration file
+
+
