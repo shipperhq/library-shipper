@@ -1,8 +1,8 @@
 {
     "name": "shipperhq/library-shipper",
     "description": "ShipperHQ Library",
-    "type": "magento2-library",
-    "version": "20.18.0",
+    "type": "library",
+    "version": "20.19.0",
     "license": [
         "OSL-3.0",
         "AFL-3.0"

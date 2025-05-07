@@ -134,3 +134,7 @@ SHQ23-4085 Readme updates
 SHQ23-4085 Update readme
 
 
+## 20.19.0 (2025-05-07)
+SHQ23-4531 Remove Magento specific naming from composer.json
+
+
