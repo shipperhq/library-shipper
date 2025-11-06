@@ -142,3 +142,7 @@ SHQ23-4531 Remove Magento specific naming from composer.json
 SHQ23-4531 Remove autoload registration file
 
 
+## 20.19.2 (2025-11-06)
+INFRA-1328 - Removed incorrect case-sensitive version of file
+
+
