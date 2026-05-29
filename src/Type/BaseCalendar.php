@@ -13,9 +13,10 @@ namespace ShipperHQ\Lib\Type;
 
 use ShipperHQ\Lib\Checkout\AbstractService;
 use ShipperHQ\Lib\Helper\Date;
+
 /**
  * Class BaseCalendar
- * @package ShipperHQ_Lib
+ * @package ShipperHQ\Lib
  */
 class BaseCalendar
 {
@@ -106,6 +107,15 @@ class BaseCalendar
         return $rates;
     }
 
+    /**
+     * Saves the data to the checkout_selections array in the checkout session
+     *
+     * @param $dateSelected
+     * @param $carrierId
+     * @param $carrierCode
+     * @param $carrierGroupId
+     * @return void
+     */
     public function saveDateSelectOnCheckoutProceed($dateSelected, $carrierId, $carrierCode, $carrierGroupId)
     {
         $params = $this->getDateSelectSaveParameters($dateSelected, $carrierId, $carrierCode, $carrierGroupId);

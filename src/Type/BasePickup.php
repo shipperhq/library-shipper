@@ -14,7 +14,7 @@ namespace ShipperHQ\Lib\Type;
 /**
  * Class BasePickup
  *
- * @package ShipperHQ_Lib
+ * @package ShipperHQ\Lib
  */
 class BasePickup extends BaseCalendar
 {

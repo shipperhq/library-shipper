@@ -14,7 +14,7 @@ namespace ShipperHQ\Lib\Type;
 /**
  * Class BaseOption
  *
- * @package ShipperHQ_Lib
+ * @package ShipperHQ\Lib
  */
 class BaseOption extends BaseCalendar
 {
@@ -111,7 +111,7 @@ class BaseOption extends BaseCalendar
 
         $shippingOptions = [];
         foreach (self::$shippingOptions as $option) {
-            //destination type is case sensitive in SHQ
+            // destination type is case-sensitive in SHQ
             if (isset($optionValues[$option]) && $optionValues[$option] != '') {
                 $shippingOptions[] = ['name'=> $option, 'value' => strtolower((string) $optionValues[$option])];
             }

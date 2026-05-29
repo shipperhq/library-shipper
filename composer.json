@@ -2,7 +2,7 @@
     "name": "shipperhq/library-shipper",
     "description": "ShipperHQ Library",
     "type": "library",
-    "version": "20.19.2",
+    "version": "20.19.3",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
